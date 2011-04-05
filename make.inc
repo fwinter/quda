@@ -1,0 +1,154 @@
+###### Local configuration:
+
+CUDA_INSTALL_PATH = /usr/local/cuda
+
+CPU_ARCH = x86_64  	  # x86 or x86_64
+GPU_ARCH = sm_20	  # sm_10, sm_11, sm_12, sm_13, sm_20 or sm_21
+GPU_EMU  = no      # set to 'yes' for device emulation (CUDA 3.0 only)
+OS       = linux	  # linux or osx
+
+PYTHON = python	  # python 2.5 or later required for 'make gen'
+DEVICE = 0         # CUDA device to use for 'make tune'
+
+# compilation options
+HOST_DEBUG = no      # compile host debug code
+DEVICE_DEBUG = no  # compile deivce debug code for cuda-gdb 
+VERBOSE = no            # display kernel register useage
+
+BUILD_WILSON_DIRAC = yes       	# build Wilson and clover Dirac operators?
+BUILD_DOMAIN_WALL_DIRAC = no   	# build domain wall Dirac operators?
+BUILD_STAGGERED_DIRAC = no		# build staggered Dirac operators?
+BUILD_TWISTED_MASS_DIRAC = no	# build twisted mass Dirac operators?
+BUILD_FATLINK = no             	# build code for computing asqtad fat links?
+BUILD_GAUGE_FORCE = no         	# build code for (1-loop Symanzik) gauge force?
+BUILD_FERMION_FORCE = no	      	# build code for asqtad fermion force?
+
+# Multiple GPU options
+BUILD_MULTI_GPU = yes # set to 'yes' to build the multi-GPU code
+BUILD_QMP = yes     # set to 'yes' to build the QMP multi-GPU code
+BUILD_MPI = no        # set to 'yes' to build the MPI multi-GPU code
+OVERLAP_COMMS = yes  # set to 'yes' to overlap comms and compute
+
+FECC = gcc 	      # Front end CC
+FECXX = g++           # Front end CXX
+
+MPI_HOME=/home/fwinter/toolchain/install/openmpi-1.5
+MPICC = $(MPI_HOME)/bin/mpicc
+MPICXX = $(MPI_HOME)/bin/mpicxx
+
+QMP_HOME=/home/fwinter/balint/package/install/qmp
+
+######
+
+INC = -I$(CUDA_INSTALL_PATH)/include
+
+ifeq ($(strip $(CPU_ARCH)), x86_64)
+  ifeq ($(strip $(OS)), osx)
+    LIB = -L$(CUDA_INSTALL_PATH)/lib -lcudart
+    NVCCOPT = -m64
+  else
+    LIB = -L$(CUDA_INSTALL_PATH)/lib64 -lcudart
+  endif
+else
+  LIB = -L$(CUDA_INSTALL_PATH)/lib -lcudart
+  COPT = -malign-double
+endif
+
+COPT += -D__CUDA_ARCH__=$(GPU_ARCH:sm_%=%0)
+NVCCOPT += -D__CUDA_ARCH__=$(GPU_ARCH:sm_%=%0)
+
+ifeq ($(strip $(GPU_EMU)), yes)
+  COPT += -D__DEVICE_EMULATION__
+  NVCCOPT = -deviceemu
+endif
+
+ifeq ($(strip $(GPU_ARCH)), sm_20)
+  NVCCOPT += -ftz=true -prec-div=false -prec-sqrt=false
+endif
+
+ifeq ($(strip $(BUILD_MULTI_GPU)), yes)
+  COPT += -DMULTI_GPU
+  NVCCOPT += -DMULTI_GPU
+endif
+
+RUN =
+CC  = $(FECC)
+CXX = $(FECXX)
+
+ifeq ($(strip $(BUILD_QMP)), yes)
+  RUN = $(MPI_HOME)/bin/mpirun -np 1
+  CC = $(MPICC)
+  CXX = $(MPICXX)
+  QMP_CFLAGS = $(shell $(QMP_HOME)/bin/qmp-config --cflags )
+  QMP_LDFLAGS = $(shell $(QMP_HOME)/bin/qmp-config --ldflags )
+  QMP_LIBS = $(shell $(QMP_HOME)/bin/qmp-config --libs )
+  INC += -DQMP_COMMS $(QMP_CFLAGS)
+  LIB += $(QMP_LDFLAGS) $(QMP_LIBS)
+endif 
+
+ifeq ($(strip $(BUILD_MPI)), yes)
+  RUN = $(MPI_HOME)/bin/mpirun -np 1
+  CC = $(MPICC)
+  CXX = $(MPICXX)
+  MPI_CFLAGS =
+  MPI_LDFLAGS =
+  MPI_LIBS =
+  INC += -DMPI_COMMS $(MPI_CFLAGS)
+  LIB += $(MPI_LDFLAGS) $(MPI_LIBS)
+  EXCHANGE_FACE=exchange_face.o
+  MPICOMM=mpicomm.o
+endif
+
+
+ifeq ($(strip $(OVERLAP_COMMS)), yes)
+  COPT += -DOVERLAP_COMMS
+  NVCCOPT += -DOVERLAP_COMMS
+endif
+
+ifeq ($(strip $(BUILD_WILSON_DIRAC)), yes)
+  NVCCOPT += -DGPU_WILSON_DIRAC
+  WILSON_DIRAC_TEST=wilson_dslash_test wilson_invert_test wilson_multi_invert_test
+endif
+ifeq ($(strip $(BUILD_DOMAIN_WALL_DIRAC)), yes)
+  NVCCOPT += -DGPU_DOMAIN_WALL_DIRAC
+  DOMAIN_WALL_DIRAC_TEST=domain_wall_dslash_test domain_wall_invert_test
+endif
+ifeq ($(strip $(BUILD_STAGGERED_DIRAC)), yes)
+  NVCCOPT += -DGPU_STAGGERED_DIRAC
+  STAGGERED_DIRAC_TEST=staggered_dslash_test staggered_invert_test
+endif
+ifeq ($(strip $(BUILD_TWISTED_MASS_DIRAC)), yes)
+  NVCCOPT += -DGPU_TWISTED_MASS_DIRAC -DGPU_WILSON_DIRAC
+  TWISTED_MASS_DIRAC_TEST=twisted_mass_dslash_test twisted_mass_invert_test
+endif
+ifeq ($(strip $(BUILD_FATLINK)), yes)
+  NVCCOPT += -DGPU_FATLINK
+  FATLINK_TEST=llfat_test
+  COPT += -DGPU_FATLINK
+  FATLINK_QUDA_ITF=llfat_quda_itf.o
+endif
+ifeq ($(strip $(BUILD_GAUGE_FORCE)), yes)
+  NVCCOPT += -DGPU_GAUGE_FORCE
+  GAUGE_FORCE_TEST=gauge_force_test
+endif
+ifeq ($(strip $(BUILD_FERMION_FORCE)), yes)
+  NVCCOPT += -DGPU_FERMION_FORCE
+  FERMION_FORCE_TEST=fermion_force_test
+endif
+
+ifeq ($(strip $(HOST_DEBUG)), yes)
+  NVCCOPT += -g
+  COPT += -g -fno-inline
+endif
+ifeq ($(strip $(DEVICE_DEBUG)), yes)
+  NVCCOPT += -G
+endif
+ifeq ($(strip $(VERBOSE)), yes)
+  NVCCOPT += --ptxas-options=-v
+endif
+
+CFLAGS = -Wall -O3 -std=c99 $(COPT) $(INC)
+CXXFLAGS = -Wall -O3 $(COPT) $(INC)
+NVCC = $(CUDA_INSTALL_PATH)/bin/nvcc 
+NVCCFLAGS = -O3 $(NVCCOPT) -arch=$(GPU_ARCH) $(INC)
+LDFLAGS = -fPIC $(LIB)
