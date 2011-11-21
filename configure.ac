@@ -152,6 +152,19 @@ AC_ARG_WITH(qio,
  [ qio_home="" ; build_qio="no" ]
 )
 
+AC_ARG_ENABLE(qmem,
+  AC_HELP_STRING([ --enable-qmem], [ QMEM support (default=disabled) ]),
+  [ build_qmem=${enableval} ], 
+  [ build_qmem="no" ]
+)
+
+dnl Specify QDP++ Location
+AC_ARG_WITH(qdp,
+  AC_HELP_STRING([--with-qdp=QDPDIR], [ Specify QDP++ installation directory ]),
+  [ qdp_home=${withval} ],
+  [ qdp_home="" ]
+)
+
 
 dnl Input validation
 
@@ -280,6 +293,14 @@ case ${overlap_comms} in
 yes|no);;
 *) 
   AC_MSG_ERROR([ invalid value for --enable-overlap-comms ])
+  ;;
+esac
+
+dnl QMEM support
+case ${build_qmem} in
+yes|no);;
+*) 
+  AC_MSG_ERROR([ invalid value for --enable-qmem : ${build_qmem} ])
   ;;
 esac
 
@@ -417,6 +438,12 @@ AC_SUBST( QIO_HOME, [${qio_home}] )
 
 AC_MSG_NOTICE([Setting HAVE_NUMA=${ac_cv_header_numa_h}])
 AC_SUBST( HAVE_NUMA, [${ac_cv_header_numa_h}] )
+
+AC_MSG_NOTICE([Setting USE_QMEM = ${build_qmem} ])
+AC_SUBST( USE_QMEM, [${build_qmem}])
+
+AC_MSG_NOTICE([Setting QDP_INSTALL_PATH = ${qdp_home} ])
+AC_SUBST( QDP_INSTALL_PATH, [${qdp_home} ])
 
 AC_CONFIG_FILES(make.inc)
 AC_OUTPUT
