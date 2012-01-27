@@ -1,0 +1,1014 @@
+unprec_dwf4d_linop_w.o: \
+ /home/fwinter/git/chroma/lib/actions/ferm/linop/unprec_dwf4d_linop_w.cc \
+ /home/fwinter/git/chroma/lib/chromabase.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_config.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_config_internal.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_precision.h \
+ /usr/include/c++/4.4/cstdio \
+ /usr/include/c++/4.4/x86_64-linux-gnu/bits/c++config.h \
+ /usr/include/c++/4.4/x86_64-linux-gnu/bits/os_defines.h \
+ /usr/include/features.h /usr/include/bits/predefs.h \
+ /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
+ /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
+ /usr/include/c++/4.4/x86_64-linux-gnu/bits/cpu_defines.h \
+ /usr/include/c++/4.4/cstddef \
+ /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stddef.h \
+ /usr/include/stdio.h /usr/include/bits/types.h \
+ /usr/include/bits/typesizes.h /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stdarg.h \
+ /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+ /usr/include/bits/stdio.h /usr/include/bits/stdio2.h \
+ /usr/include/c++/4.4/cstdlib /usr/include/stdlib.h \
+ /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
+ /usr/include/endian.h /usr/include/bits/endian.h \
+ /usr/include/bits/byteswap.h /usr/include/xlocale.h \
+ /usr/include/sys/types.h /usr/include/time.h /usr/include/sys/select.h \
+ /usr/include/bits/select.h /usr/include/bits/sigset.h \
+ /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+ /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
+ /usr/include/bits/stdlib.h /usr/include/c++/4.4/ostream \
+ /usr/include/c++/4.4/ios /usr/include/c++/4.4/iosfwd \
+ /usr/include/c++/4.4/bits/stringfwd.h \
+ /usr/include/c++/4.4/bits/postypes.h /usr/include/c++/4.4/cwchar \
+ /usr/include/bits/wchar.h /usr/include/bits/wchar2.h \
+ /usr/include/c++/4.4/exception /usr/include/c++/4.4/bits/char_traits.h \
+ /usr/include/c++/4.4/bits/stl_algobase.h \
+ /usr/include/c++/4.4/bits/functexcept.h \
+ /usr/include/c++/4.4/exception_defines.h \
+ /usr/include/c++/4.4/bits/cpp_type_traits.h \
+ /usr/include/c++/4.4/ext/type_traits.h \
+ /usr/include/c++/4.4/ext/numeric_traits.h \
+ /usr/include/c++/4.4/bits/stl_pair.h /usr/include/c++/4.4/bits/move.h \
+ /usr/include/c++/4.4/bits/concept_check.h \
+ /usr/include/c++/4.4/bits/stl_iterator_base_types.h \
+ /usr/include/c++/4.4/bits/stl_iterator_base_funcs.h \
+ /usr/include/c++/4.4/bits/stl_iterator.h \
+ /usr/include/c++/4.4/debug/debug.h /usr/include/c++/4.4/bits/localefwd.h \
+ /usr/include/c++/4.4/x86_64-linux-gnu/bits/c++locale.h \
+ /usr/include/c++/4.4/clocale /usr/include/locale.h \
+ /usr/include/bits/locale.h /usr/include/c++/4.4/cctype \
+ /usr/include/ctype.h /usr/include/c++/4.4/bits/ios_base.h \
+ /usr/include/c++/4.4/ext/atomicity.h \
+ /usr/include/c++/4.4/x86_64-linux-gnu/bits/gthr.h \
+ /usr/include/c++/4.4/x86_64-linux-gnu/bits/gthr-default.h \
+ /usr/include/pthread.h /usr/include/sched.h /usr/include/bits/sched.h \
+ /usr/include/bits/setjmp.h /usr/include/unistd.h \
+ /usr/include/bits/posix_opt.h /usr/include/bits/environments.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h \
+ /usr/include/bits/unistd.h \
+ /usr/include/c++/4.4/x86_64-linux-gnu/bits/atomic_word.h \
+ /usr/include/c++/4.4/bits/locale_classes.h /usr/include/c++/4.4/string \
+ /usr/include/c++/4.4/bits/allocator.h \
+ /usr/include/c++/4.4/x86_64-linux-gnu/bits/c++allocator.h \
+ /usr/include/c++/4.4/ext/new_allocator.h /usr/include/c++/4.4/new \
+ /usr/include/c++/4.4/bits/ostream_insert.h \
+ /usr/include/c++/4.4/cxxabi-forced.h \
+ /usr/include/c++/4.4/bits/stl_function.h \
+ /usr/include/c++/4.4/backward/binders.h \
+ /usr/include/c++/4.4/bits/basic_string.h \
+ /usr/include/c++/4.4/initializer_list \
+ /usr/include/c++/4.4/bits/basic_string.tcc \
+ /usr/include/c++/4.4/bits/locale_classes.tcc \
+ /usr/include/c++/4.4/streambuf /usr/include/c++/4.4/bits/streambuf.tcc \
+ /usr/include/c++/4.4/bits/basic_ios.h \
+ /usr/include/c++/4.4/bits/locale_facets.h /usr/include/c++/4.4/cwctype \
+ /usr/include/wctype.h \
+ /usr/include/c++/4.4/x86_64-linux-gnu/bits/ctype_base.h \
+ /usr/include/c++/4.4/bits/streambuf_iterator.h \
+ /usr/include/c++/4.4/x86_64-linux-gnu/bits/ctype_inline.h \
+ /usr/include/c++/4.4/bits/locale_facets.tcc \
+ /usr/include/c++/4.4/bits/basic_ios.tcc \
+ /usr/include/c++/4.4/bits/ostream.tcc /usr/include/c++/4.4/iostream \
+ /usr/include/c++/4.4/istream /usr/include/c++/4.4/bits/istream.tcc \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/PETE.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/Scalar.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/TypeComputations.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/TreeNodes.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/OperatorTags.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/Functors.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/Combiners.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/ForEach.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/CreateLeaf.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_init.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_singleton.h \
+ /usr/include/c++/4.4/algorithm /usr/include/c++/4.4/bits/stl_algo.h \
+ /usr/include/c++/4.4/bits/algorithmfwd.h \
+ /usr/include/c++/4.4/bits/stl_heap.h \
+ /usr/include/c++/4.4/bits/stl_tempbuf.h \
+ /usr/include/c++/4.4/bits/stl_construct.h \
+ /usr/include/c++/4.4/bits/stl_uninitialized.h \
+ /usr/include/c++/4.4/stdexcept /usr/include/c++/4.4/cassert \
+ /usr/include/assert.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_forward.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_stopwatch.h \
+ /usr/include/sys/time.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_multi.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_config.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_mem.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_cuda.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_cache.h \
+ /usr/include/c++/4.4/map /usr/include/c++/4.4/bits/stl_tree.h \
+ /usr/include/c++/4.4/bits/stl_map.h \
+ /usr/include/c++/4.4/bits/stl_multimap.h /usr/include/c++/4.4/list \
+ /usr/include/c++/4.4/bits/stl_list.h /usr/include/c++/4.4/bits/list.tcc \
+ /usr/include/c++/4.4/functional /usr/include/c++/4.4/fstream \
+ /usr/include/c++/4.4/bits/codecvt.h \
+ /usr/include/c++/4.4/x86_64-linux-gnu/bits/basic_file.h \
+ /usr/include/c++/4.4/x86_64-linux-gnu/bits/c++io.h \
+ /usr/include/c++/4.4/bits/fstream.tcc \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_allocator.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_default_allocator.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_pool_allocator.h \
+ /usr/include/c++/4.4/cstring /usr/include/string.h \
+ /usr/include/bits/string3.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_dynamic_allocator.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_allocators.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_gpuhelper.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_subset_gpu.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_params.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_layout.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_io.h \
+ /usr/include/c++/4.4/sstream /usr/include/c++/4.4/bits/sstream.tcc \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_byteorder.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_qlimewriter.h \
+ /usr/include/c++/4.4/climits \
+ /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/limits.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/syslimits.h \
+ /usr/include/limits.h /usr/include/bits/posix1_lim.h \
+ /usr/include/bits/local_lim.h /usr/include/linux/limits.h \
+ /usr/include/bits/posix2_lim.h /usr/include/bits/xopen_lim.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime_config.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime_config_internal.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/dcap-overload.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime_defs.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime_header.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime_fixed_types.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime_config.h \
+ /usr/include/stdint.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime_writer.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime_reader.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_stdio.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_xmlio.h \
+ /usr/include/c++/4.4/stack /usr/include/c++/4.4/deque \
+ /usr/include/c++/4.4/bits/stl_deque.h \
+ /usr/include/c++/4.4/bits/deque.tcc \
+ /usr/include/c++/4.4/bits/stl_stack.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/xml_simplewriter.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/xml_attribute.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/basic_xpath_reader.h \
+ /usr/include/libxml2/libxml/xmlmemory.h \
+ /usr/include/libxml2/libxml/xmlversion.h \
+ /usr/include/libxml2/libxml/xmlexports.h \
+ /usr/include/libxml2/libxml/threads.h \
+ /usr/include/libxml2/libxml/globals.h \
+ /usr/include/libxml2/libxml/parser.h /usr/include/libxml2/libxml/tree.h \
+ /usr/include/libxml2/libxml/xmlstring.h \
+ /usr/include/libxml2/libxml/xmlregexp.h \
+ /usr/include/libxml2/libxml/dict.h /usr/include/libxml2/libxml/hash.h \
+ /usr/include/libxml2/libxml/valid.h \
+ /usr/include/libxml2/libxml/xmlerror.h \
+ /usr/include/libxml2/libxml/list.h \
+ /usr/include/libxml2/libxml/xmlautomata.h \
+ /usr/include/libxml2/libxml/entities.h \
+ /usr/include/libxml2/libxml/encoding.h /usr/include/iconv.h \
+ /usr/include/libxml2/libxml/xmlIO.h /usr/include/libxml2/libxml/SAX.h \
+ /usr/include/libxml2/libxml/xlink.h /usr/include/libxml2/libxml/SAX2.h \
+ /usr/include/libxml2/libxml/xpath.h \
+ /usr/include/libxml2/libxml/xpathInternals.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/xml_document.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_qdpio.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qio.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qio_config.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qio_config_internal.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qioxml.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qio_string.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qio_stdint.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qio_config.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qioxml_internal.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qioxml_private.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qioxml_ildg_record.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qioxml_usqcd_prop.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qioxml_usqcd_ksprop.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qioxml_usqcd_gauge.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lrl.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/dml.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_defs.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_scalarsite_defs.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_map.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_traits.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_qdpexpr.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_qdptype.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_qdpsubtype.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/QDPOperators.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_newops_gpu.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/cudp_iface.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_optops.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_profile.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_simpleword.h \
+ /usr/include/c++/4.4/cmath /usr/include/math.h \
+ /usr/include/bits/huge_val.h /usr/include/bits/huge_valf.h \
+ /usr/include/bits/huge_vall.h /usr/include/bits/inf.h \
+ /usr/include/bits/nan.h /usr/include/bits/mathdef.h \
+ /usr/include/bits/mathcalls.h /usr/include/bits/mathinline.h \
+ /usr/include/c++/4.4/bits/cmath.tcc \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_reality.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_inner.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primitive.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primscalar.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primmatrix.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primvector.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primseed.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primcolormat.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primcolorvec.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primgamma_gpu.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primspinmat.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primspinvec.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_scalar_specific_map.h \
+ /usr/include/dlfcn.h /usr/include/bits/dlfcn.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_parsetree.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/ForEachInOrder.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_parsetree_peteops.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_parsetree_qdpops.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_outer_gpu.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_outersubtype.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_globalfuncs.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_specializations.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_random.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_cudp_just.h \
+ /usr/include/dirent.h /usr/include/bits/dirent.h /usr/include/errno.h \
+ /usr/include/bits/errno.h /usr/include/linux/errno.h \
+ /usr/include/asm/errno.h /usr/include/asm-generic/errno.h \
+ /usr/include/asm-generic/errno-base.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_dispatch.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_scalar_specific_gpu.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_scalarsite_generic.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/qdp_scalarsite_generic_linalg.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_mult_nn.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_mult_na.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_mult_an.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_mult_aa.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_mat_vec.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_addvec.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/qdp_scalarsite_generic_linalg_wrapper.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/qdp_scalarsite_generic_blas.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vaxpy3.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vaxmy3.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vaxpby3.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vaxmby3.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vscal.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_local_sumsq.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vaxpy3_norm.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vaxmby3_norm.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_local_vcdot.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_local_vcdot_real.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/qdp_scalarsite_generic_blas_wrapper.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/qdp_scalarsite_generic_cblas.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vcscal.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vcaxpy3.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vcaxmy3.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vcaxpby3.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vcaxmby3.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/qdp_scalarsite_generic_cblas_wrapper.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/qdp_scalarsite_generic_blas_g5.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vaxpy3_g5.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vaypx3_g5.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vadd3_g5.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vscal_g5.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vaxpby3_g5.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_g5.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/qdp_scalarsite_generic_blas_g5_wrapper.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_flopcount.h \
+ /home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_bytecount.h \
+ /home/fwinter/git/chroma/lib/actions/ferm/invert/invcg2_array.h \
+ /home/fwinter/git/chroma/lib/linearop.h \
+ /home/fwinter/git/chroma/lib/chromabase.h \
+ /home/fwinter/git/chroma/lib/fermbc.h \
+ /home/fwinter/git/chroma/lib/boundcond.h \
+ /home/fwinter/git/chroma/lib/syssolver.h \
+ /home/fwinter/git/chroma/lib/actions/ferm/linop/unprec_dwf4d_linop_w.h \
+ /home/fwinter/git/chroma/lib/handle.h \
+ /home/fwinter/git/chroma/lib/actions/ferm/invert/syssolver_cg_params.h \
+ /home/fwinter/git/chroma/lib/actions/ferm/linop/dwffld_w.h
+
+/home/fwinter/git/chroma/lib/chromabase.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_config.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_config_internal.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_precision.h:
+
+/usr/include/c++/4.4/cstdio:
+
+/usr/include/c++/4.4/x86_64-linux-gnu/bits/c++config.h:
+
+/usr/include/c++/4.4/x86_64-linux-gnu/bits/os_defines.h:
+
+/usr/include/features.h:
+
+/usr/include/bits/predefs.h:
+
+/usr/include/sys/cdefs.h:
+
+/usr/include/bits/wordsize.h:
+
+/usr/include/gnu/stubs.h:
+
+/usr/include/gnu/stubs-64.h:
+
+/usr/include/c++/4.4/x86_64-linux-gnu/bits/cpu_defines.h:
+
+/usr/include/c++/4.4/cstddef:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stddef.h:
+
+/usr/include/stdio.h:
+
+/usr/include/bits/types.h:
+
+/usr/include/bits/typesizes.h:
+
+/usr/include/libio.h:
+
+/usr/include/_G_config.h:
+
+/usr/include/wchar.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stdarg.h:
+
+/usr/include/bits/stdio_lim.h:
+
+/usr/include/bits/sys_errlist.h:
+
+/usr/include/bits/stdio.h:
+
+/usr/include/bits/stdio2.h:
+
+/usr/include/c++/4.4/cstdlib:
+
+/usr/include/stdlib.h:
+
+/usr/include/bits/waitflags.h:
+
+/usr/include/bits/waitstatus.h:
+
+/usr/include/endian.h:
+
+/usr/include/bits/endian.h:
+
+/usr/include/bits/byteswap.h:
+
+/usr/include/xlocale.h:
+
+/usr/include/sys/types.h:
+
+/usr/include/time.h:
+
+/usr/include/sys/select.h:
+
+/usr/include/bits/select.h:
+
+/usr/include/bits/sigset.h:
+
+/usr/include/bits/time.h:
+
+/usr/include/sys/sysmacros.h:
+
+/usr/include/bits/pthreadtypes.h:
+
+/usr/include/alloca.h:
+
+/usr/include/bits/stdlib.h:
+
+/usr/include/c++/4.4/ostream:
+
+/usr/include/c++/4.4/ios:
+
+/usr/include/c++/4.4/iosfwd:
+
+/usr/include/c++/4.4/bits/stringfwd.h:
+
+/usr/include/c++/4.4/bits/postypes.h:
+
+/usr/include/c++/4.4/cwchar:
+
+/usr/include/bits/wchar.h:
+
+/usr/include/bits/wchar2.h:
+
+/usr/include/c++/4.4/exception:
+
+/usr/include/c++/4.4/bits/char_traits.h:
+
+/usr/include/c++/4.4/bits/stl_algobase.h:
+
+/usr/include/c++/4.4/bits/functexcept.h:
+
+/usr/include/c++/4.4/exception_defines.h:
+
+/usr/include/c++/4.4/bits/cpp_type_traits.h:
+
+/usr/include/c++/4.4/ext/type_traits.h:
+
+/usr/include/c++/4.4/ext/numeric_traits.h:
+
+/usr/include/c++/4.4/bits/stl_pair.h:
+
+/usr/include/c++/4.4/bits/move.h:
+
+/usr/include/c++/4.4/bits/concept_check.h:
+
+/usr/include/c++/4.4/bits/stl_iterator_base_types.h:
+
+/usr/include/c++/4.4/bits/stl_iterator_base_funcs.h:
+
+/usr/include/c++/4.4/bits/stl_iterator.h:
+
+/usr/include/c++/4.4/debug/debug.h:
+
+/usr/include/c++/4.4/bits/localefwd.h:
+
+/usr/include/c++/4.4/x86_64-linux-gnu/bits/c++locale.h:
+
+/usr/include/c++/4.4/clocale:
+
+/usr/include/locale.h:
+
+/usr/include/bits/locale.h:
+
+/usr/include/c++/4.4/cctype:
+
+/usr/include/ctype.h:
+
+/usr/include/c++/4.4/bits/ios_base.h:
+
+/usr/include/c++/4.4/ext/atomicity.h:
+
+/usr/include/c++/4.4/x86_64-linux-gnu/bits/gthr.h:
+
+/usr/include/c++/4.4/x86_64-linux-gnu/bits/gthr-default.h:
+
+/usr/include/pthread.h:
+
+/usr/include/sched.h:
+
+/usr/include/bits/sched.h:
+
+/usr/include/bits/setjmp.h:
+
+/usr/include/unistd.h:
+
+/usr/include/bits/posix_opt.h:
+
+/usr/include/bits/environments.h:
+
+/usr/include/bits/confname.h:
+
+/usr/include/getopt.h:
+
+/usr/include/bits/unistd.h:
+
+/usr/include/c++/4.4/x86_64-linux-gnu/bits/atomic_word.h:
+
+/usr/include/c++/4.4/bits/locale_classes.h:
+
+/usr/include/c++/4.4/string:
+
+/usr/include/c++/4.4/bits/allocator.h:
+
+/usr/include/c++/4.4/x86_64-linux-gnu/bits/c++allocator.h:
+
+/usr/include/c++/4.4/ext/new_allocator.h:
+
+/usr/include/c++/4.4/new:
+
+/usr/include/c++/4.4/bits/ostream_insert.h:
+
+/usr/include/c++/4.4/cxxabi-forced.h:
+
+/usr/include/c++/4.4/bits/stl_function.h:
+
+/usr/include/c++/4.4/backward/binders.h:
+
+/usr/include/c++/4.4/bits/basic_string.h:
+
+/usr/include/c++/4.4/initializer_list:
+
+/usr/include/c++/4.4/bits/basic_string.tcc:
+
+/usr/include/c++/4.4/bits/locale_classes.tcc:
+
+/usr/include/c++/4.4/streambuf:
+
+/usr/include/c++/4.4/bits/streambuf.tcc:
+
+/usr/include/c++/4.4/bits/basic_ios.h:
+
+/usr/include/c++/4.4/bits/locale_facets.h:
+
+/usr/include/c++/4.4/cwctype:
+
+/usr/include/wctype.h:
+
+/usr/include/c++/4.4/x86_64-linux-gnu/bits/ctype_base.h:
+
+/usr/include/c++/4.4/bits/streambuf_iterator.h:
+
+/usr/include/c++/4.4/x86_64-linux-gnu/bits/ctype_inline.h:
+
+/usr/include/c++/4.4/bits/locale_facets.tcc:
+
+/usr/include/c++/4.4/bits/basic_ios.tcc:
+
+/usr/include/c++/4.4/bits/ostream.tcc:
+
+/usr/include/c++/4.4/iostream:
+
+/usr/include/c++/4.4/istream:
+
+/usr/include/c++/4.4/bits/istream.tcc:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/PETE.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/Scalar.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/TypeComputations.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/TreeNodes.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/OperatorTags.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/Functors.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/Combiners.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/ForEach.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/CreateLeaf.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_init.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_singleton.h:
+
+/usr/include/c++/4.4/algorithm:
+
+/usr/include/c++/4.4/bits/stl_algo.h:
+
+/usr/include/c++/4.4/bits/algorithmfwd.h:
+
+/usr/include/c++/4.4/bits/stl_heap.h:
+
+/usr/include/c++/4.4/bits/stl_tempbuf.h:
+
+/usr/include/c++/4.4/bits/stl_construct.h:
+
+/usr/include/c++/4.4/bits/stl_uninitialized.h:
+
+/usr/include/c++/4.4/stdexcept:
+
+/usr/include/c++/4.4/cassert:
+
+/usr/include/assert.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_forward.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_stopwatch.h:
+
+/usr/include/sys/time.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_multi.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_config.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_mem.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_cuda.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_cache.h:
+
+/usr/include/c++/4.4/map:
+
+/usr/include/c++/4.4/bits/stl_tree.h:
+
+/usr/include/c++/4.4/bits/stl_map.h:
+
+/usr/include/c++/4.4/bits/stl_multimap.h:
+
+/usr/include/c++/4.4/list:
+
+/usr/include/c++/4.4/bits/stl_list.h:
+
+/usr/include/c++/4.4/bits/list.tcc:
+
+/usr/include/c++/4.4/functional:
+
+/usr/include/c++/4.4/fstream:
+
+/usr/include/c++/4.4/bits/codecvt.h:
+
+/usr/include/c++/4.4/x86_64-linux-gnu/bits/basic_file.h:
+
+/usr/include/c++/4.4/x86_64-linux-gnu/bits/c++io.h:
+
+/usr/include/c++/4.4/bits/fstream.tcc:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_allocator.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_default_allocator.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_pool_allocator.h:
+
+/usr/include/c++/4.4/cstring:
+
+/usr/include/string.h:
+
+/usr/include/bits/string3.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_dynamic_allocator.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_allocators.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_gpuhelper.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_subset_gpu.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_params.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_layout.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_io.h:
+
+/usr/include/c++/4.4/sstream:
+
+/usr/include/c++/4.4/bits/sstream.tcc:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_byteorder.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_qlimewriter.h:
+
+/usr/include/c++/4.4/climits:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/limits.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/syslimits.h:
+
+/usr/include/limits.h:
+
+/usr/include/bits/posix1_lim.h:
+
+/usr/include/bits/local_lim.h:
+
+/usr/include/linux/limits.h:
+
+/usr/include/bits/posix2_lim.h:
+
+/usr/include/bits/xopen_lim.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime_config.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime_config_internal.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/dcap-overload.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime_defs.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime_header.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime_fixed_types.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime_config.h:
+
+/usr/include/stdint.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime_writer.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime_reader.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_stdio.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_xmlio.h:
+
+/usr/include/c++/4.4/stack:
+
+/usr/include/c++/4.4/deque:
+
+/usr/include/c++/4.4/bits/stl_deque.h:
+
+/usr/include/c++/4.4/bits/deque.tcc:
+
+/usr/include/c++/4.4/bits/stl_stack.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/xml_simplewriter.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/xml_attribute.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/basic_xpath_reader.h:
+
+/usr/include/libxml2/libxml/xmlmemory.h:
+
+/usr/include/libxml2/libxml/xmlversion.h:
+
+/usr/include/libxml2/libxml/xmlexports.h:
+
+/usr/include/libxml2/libxml/threads.h:
+
+/usr/include/libxml2/libxml/globals.h:
+
+/usr/include/libxml2/libxml/parser.h:
+
+/usr/include/libxml2/libxml/tree.h:
+
+/usr/include/libxml2/libxml/xmlstring.h:
+
+/usr/include/libxml2/libxml/xmlregexp.h:
+
+/usr/include/libxml2/libxml/dict.h:
+
+/usr/include/libxml2/libxml/hash.h:
+
+/usr/include/libxml2/libxml/valid.h:
+
+/usr/include/libxml2/libxml/xmlerror.h:
+
+/usr/include/libxml2/libxml/list.h:
+
+/usr/include/libxml2/libxml/xmlautomata.h:
+
+/usr/include/libxml2/libxml/entities.h:
+
+/usr/include/libxml2/libxml/encoding.h:
+
+/usr/include/iconv.h:
+
+/usr/include/libxml2/libxml/xmlIO.h:
+
+/usr/include/libxml2/libxml/SAX.h:
+
+/usr/include/libxml2/libxml/xlink.h:
+
+/usr/include/libxml2/libxml/SAX2.h:
+
+/usr/include/libxml2/libxml/xpath.h:
+
+/usr/include/libxml2/libxml/xpathInternals.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/xml_document.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_qdpio.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qio.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qio_config.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qio_config_internal.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qioxml.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qio_string.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qio_stdint.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qio_config.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qioxml_internal.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qioxml_private.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qioxml_ildg_record.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qioxml_usqcd_prop.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qioxml_usqcd_ksprop.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qioxml_usqcd_gauge.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lrl.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/lime.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/dml.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_defs.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_scalarsite_defs.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_map.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_traits.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_qdpexpr.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_qdptype.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_qdpsubtype.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/QDPOperators.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_newops_gpu.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/cudp_iface.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_optops.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_profile.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_simpleword.h:
+
+/usr/include/c++/4.4/cmath:
+
+/usr/include/math.h:
+
+/usr/include/bits/huge_val.h:
+
+/usr/include/bits/huge_valf.h:
+
+/usr/include/bits/huge_vall.h:
+
+/usr/include/bits/inf.h:
+
+/usr/include/bits/nan.h:
+
+/usr/include/bits/mathdef.h:
+
+/usr/include/bits/mathcalls.h:
+
+/usr/include/bits/mathinline.h:
+
+/usr/include/c++/4.4/bits/cmath.tcc:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_reality.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_inner.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primitive.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primscalar.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primmatrix.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primvector.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primseed.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primcolormat.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primcolorvec.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primgamma_gpu.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primspinmat.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_primspinvec.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_scalar_specific_map.h:
+
+/usr/include/dlfcn.h:
+
+/usr/include/bits/dlfcn.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_parsetree.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/PETE/ForEachInOrder.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_parsetree_peteops.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_parsetree_qdpops.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_outer_gpu.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_outersubtype.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_globalfuncs.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_specializations.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_random.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_cudp_just.h:
+
+/usr/include/dirent.h:
+
+/usr/include/bits/dirent.h:
+
+/usr/include/errno.h:
+
+/usr/include/bits/errno.h:
+
+/usr/include/linux/errno.h:
+
+/usr/include/asm/errno.h:
+
+/usr/include/asm-generic/errno.h:
+
+/usr/include/asm-generic/errno-base.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_dispatch.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_scalar_specific_gpu.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_scalarsite_generic.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/qdp_scalarsite_generic_linalg.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_mult_nn.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_mult_na.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_mult_an.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_mult_aa.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_mat_vec.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_addvec.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/qdp_scalarsite_generic_linalg_wrapper.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/qdp_scalarsite_generic_blas.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vaxpy3.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vaxmy3.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vaxpby3.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vaxmby3.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vscal.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_local_sumsq.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vaxpy3_norm.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vaxmby3_norm.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_local_vcdot.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_local_vcdot_real.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/qdp_scalarsite_generic_blas_wrapper.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/qdp_scalarsite_generic_cblas.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vcscal.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vcaxpy3.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vcaxmy3.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vcaxpby3.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vcaxmby3.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/qdp_scalarsite_generic_cblas_wrapper.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/qdp_scalarsite_generic_blas_g5.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vaxpy3_g5.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vaypx3_g5.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vadd3_g5.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vscal_g5.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_vaxpby3_g5.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/generic_blas_g5.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/scalarsite_generic/qdp_scalarsite_generic_blas_g5_wrapper.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_flopcount.h:
+
+/home/fwinter/toolchain/install/qdp++-quda-accel-generic-devel-scalar-single/include/qdp_bytecount.h:
+
+/home/fwinter/git/chroma/lib/actions/ferm/invert/invcg2_array.h:
+
+/home/fwinter/git/chroma/lib/linearop.h:
+
+/home/fwinter/git/chroma/lib/chromabase.h:
+
+/home/fwinter/git/chroma/lib/fermbc.h:
+
+/home/fwinter/git/chroma/lib/boundcond.h:
+
+/home/fwinter/git/chroma/lib/syssolver.h:
+
+/home/fwinter/git/chroma/lib/actions/ferm/linop/unprec_dwf4d_linop_w.h:
+
+/home/fwinter/git/chroma/lib/handle.h:
+
+/home/fwinter/git/chroma/lib/actions/ferm/invert/syssolver_cg_params.h:
+
+/home/fwinter/git/chroma/lib/actions/ferm/linop/dwffld_w.h:

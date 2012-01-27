@@ -67,13 +67,14 @@ class LatticeField {
   int VolumeCB() const { return volumeCB; }
   int SurfaceCB(const int i) const { return surfaceCB[i]; }
   int Stride() const { return stride; }
+  int Pad() const { return pad; }
 
   QudaPrecision Precision() const { return precision; }
   QudaFieldLocation Location() const { return location; }
   QudaVerbosity Verbosity() const { return verbosity; }
   size_t GBytes() const { return total_bytes / (1<<30); } // returns total storage allocated
 
-  virtual void checkField(const LatticeField &);
+  void checkField(const LatticeField &);
 };
 
 #endif // _LATTICE_FIELD_H

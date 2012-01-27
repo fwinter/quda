@@ -1,36 +1,110 @@
 #include <gauge_field.h>
 #include <face_quda.h>
 #include <assert.h>
+#include <string.h>
 
 cpuGaugeField::cpuGaugeField(const GaugeFieldParam &param) : 
   GaugeField(param, QUDA_CPU_FIELD_LOCATION) {
 
-  if (reconstruct != QUDA_RECONSTRUCT_NO)
+  pinned = param.pinned ;
+  
+  if (reconstruct != QUDA_RECONSTRUCT_NO && 
+      reconstruct != QUDA_RECONSTRUCT_10)
     errorQuda("Reconstruction type %d not supported", reconstruct);
 
-  for (int d=0; d<nDim; d++) {
-    if (create == QUDA_NULL_FIELD_CREATE) {
-      gauge[d] = malloc(volume * reconstruct * precision * 4);
-    } else if (create == QUDA_REFERENCE_FIELD_CREATE) {
-      if (order == QUDA_QDP_GAUGE_ORDER) 
+  if (reconstruct == QUDA_RECONSTRUCT_10 && order != QUDA_MILC_GAUGE_ORDER)
+    errorQuda("10 reconstruction only supported with MILC gauge order");
+
+  if (order == QUDA_QDP_GAUGE_ORDER) {
+    gauge = (void**)malloc(nDim * sizeof(void*));
+
+    for (int d=0; d<nDim; d++) {
+      if (create == QUDA_NULL_FIELD_CREATE 
+	  || create == QUDA_ZERO_FIELD_CREATE) {
+	if(pinned){
+	  cudaMallocHost(&gauge[d], volume * reconstruct * precision);
+	}else{
+	  gauge[d] = malloc(volume * reconstruct * precision);
+	}
+	
+	if(create == QUDA_ZERO_FIELD_CREATE){
+	  memset(gauge[d], 0, volume * reconstruct * precision);
+	}
+      } else if (create == QUDA_REFERENCE_FIELD_CREATE) {
 	gauge[d] = ((void**)param.gauge)[d];
-      else
-	errorQuda("Unsupported gauge order type %d", order);
+      } else {
+	errorQuda("Unsupported creation type %d", create);
+      }
+    }
+    
+  } else if (order == QUDA_CPS_WILSON_GAUGE_ORDER || 
+	     order == QUDA_MILC_GAUGE_ORDER) {
+    if (create == QUDA_NULL_FIELD_CREATE ||
+	create == QUDA_ZERO_FIELD_CREATE) {
+      if(pinned){
+	cudaMallocHost(&(gauge), nDim*volume*reconstruct*precision);
+      }else{
+	gauge = (void**)malloc(nDim * volume * reconstruct * precision);
+      }
+      if(create == QUDA_ZERO_FIELD_CREATE){
+	memset(gauge, 0, nDim*volume * reconstruct * precision);
+      }
+    } else if (create == QUDA_REFERENCE_FIELD_CREATE) {
+      gauge = (void**)param.gauge;
     } else {
       errorQuda("Unsupported creation type %d", create);
     }
-    ghost[d] = malloc(nFace * surface[d] * reconstruct * precision);
+  } else {
+  errorQuda("Unsupported gauge order type %d", order);
   }
-
+  
+  // Ghost zone is always 2-dimensional
+  ghost = (void**)malloc(sizeof(void*)*QUDA_MAX_DIM);
+  for (int i=0; i<nDim; i++) {
+    if(pinned){
+      cudaMallocHost(&ghost[i], nFace * surface[i] * reconstruct * precision);
+    }else{
+      ghost[i] = malloc(nFace * surface[i] * reconstruct * precision);
+    }
+  }
+  
 }
 
 cpuGaugeField::~cpuGaugeField() {
 
-  for (int d=0; d<nDim; d++) {
-    if (create == QUDA_NULL_FIELD_CREATE) free(gauge[d]);
-    if (ghost[d]) free(ghost[d]);
+#if 1
+  if (create == QUDA_NULL_FIELD_CREATE  
+      || create == QUDA_ZERO_FIELD_CREATE  ) {
+    if (order == QUDA_QDP_GAUGE_ORDER){
+      for (int d=0; d<nDim; d++) {
+	if(pinned){
+	  if (gauge[d]) cudaFreeHost(gauge[d]);	  
+	}else{
+	  if (gauge[d]) free(gauge[d]);
+	}
+      }
+      if (gauge) free(gauge);
+    }else{      
+      if(pinned){
+	  if (gauge) cudaFreeHost(gauge);	  
+	}else{
+	  if (gauge) free(gauge);
+	}
+    }
   }
+  
+  
+  for (int i=0; i<nDim; i++) {
+    if(pinned){
+      if (ghost[i]) cudaFreeHost(ghost[i]);
+    }else{
+      if (ghost[i]) free(ghost[i]);
+    }
+  }
+  free(ghost);
 
+ #endif
+  
 }
 
 template <typename Float>
@@ -119,7 +193,7 @@ void packGhost(Float **gauge, Float **ghost, const int nFace, const int *X,
 // into the ghost array.
 // This should be optimized so it is reused if called multiple times
 void cpuGaugeField::exchangeGhost() const {
-  void *send[QUDA_MAX_DIM];
+  void **send = (void**)malloc(sizeof(void*)*QUDA_MAX_DIM);
 
   for (int d=0; d<nDim; d++) {
     send[d] = malloc(nFace * surface[d] * reconstruct * precision);
@@ -144,4 +218,6 @@ void cpuGaugeField::exchangeGhost() const {
   }
 
   for (int d=0; d<nDim; d++) free(send[d]);
+  free(send);
 }
+

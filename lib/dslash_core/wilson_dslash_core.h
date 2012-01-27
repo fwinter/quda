@@ -2,6 +2,12 @@
 
 #define DSLASH_SHARED_FLOATS_PER_THREAD 0
 
+
+#if (CUDA_VERSION >= 4100)
+#define VOLATILE
+#else
+#define VOLATILE volatile
+#endif
 // input spinor
 #ifdef SPINOR_DOUBLE
 #define spinorFloat double
@@ -29,7 +35,6 @@
 #define i31_im I10.y
 #define i32_re I11.x
 #define i32_im I11.y
-
 #else
 #define spinorFloat float
 #define i00_re I0.x
@@ -304,30 +309,30 @@
 #define c32_32_re c12_12_re
 
 // output spinor
-volatile spinorFloat o00_re;
-volatile spinorFloat o00_im;
-volatile spinorFloat o01_re;
-volatile spinorFloat o01_im;
-volatile spinorFloat o02_re;
-volatile spinorFloat o02_im;
-volatile spinorFloat o10_re;
-volatile spinorFloat o10_im;
-volatile spinorFloat o11_re;
-volatile spinorFloat o11_im;
-volatile spinorFloat o12_re;
-volatile spinorFloat o12_im;
-volatile spinorFloat o20_re;
-volatile spinorFloat o20_im;
-volatile spinorFloat o21_re;
-volatile spinorFloat o21_im;
-volatile spinorFloat o22_re;
-volatile spinorFloat o22_im;
-volatile spinorFloat o30_re;
-volatile spinorFloat o30_im;
-volatile spinorFloat o31_re;
-volatile spinorFloat o31_im;
-volatile spinorFloat o32_re;
-volatile spinorFloat o32_im;
+VOLATILE spinorFloat o00_re;
+VOLATILE spinorFloat o00_im;
+VOLATILE spinorFloat o01_re;
+VOLATILE spinorFloat o01_im;
+VOLATILE spinorFloat o02_re;
+VOLATILE spinorFloat o02_im;
+VOLATILE spinorFloat o10_re;
+VOLATILE spinorFloat o10_im;
+VOLATILE spinorFloat o11_re;
+VOLATILE spinorFloat o11_im;
+VOLATILE spinorFloat o12_re;
+VOLATILE spinorFloat o12_im;
+VOLATILE spinorFloat o20_re;
+VOLATILE spinorFloat o20_im;
+VOLATILE spinorFloat o21_re;
+VOLATILE spinorFloat o21_im;
+VOLATILE spinorFloat o22_re;
+VOLATILE spinorFloat o22_im;
+VOLATILE spinorFloat o30_re;
+VOLATILE spinorFloat o30_im;
+VOLATILE spinorFloat o31_re;
+VOLATILE spinorFloat o31_im;
+VOLATILE spinorFloat o32_re;
+VOLATILE spinorFloat o32_im;
 
 #ifdef SPINOR_DOUBLE
 #if (__CUDA_ARCH__ >= 200)
@@ -343,13 +348,11 @@ volatile spinorFloat o32_im;
 #endif
 #endif
 
-int x1, x2, x3, x4;
-#define SHARED_COORDS 0 
-
 #include "read_gauge.h"
 #include "read_clover.h"
 #include "io_spinor.h"
 
+int x1, x2, x3, x4;
 int X;
 
 #if (defined MULTI_GPU) && (DD_PREC==2) // half precision
@@ -2649,160 +2652,10 @@ WRITE_SPINOR(sp_stride);
 #undef i32_im
 
 #undef c00_00_re
-#undef c01_00_re
-#undef c01_00_im
-#undef c02_00_re
-#undef c02_00_im
-#undef c10_00_re
-#undef c10_00_im
-#undef c11_00_re
-#undef c11_00_im
-#undef c12_00_re
-#undef c12_00_im
-#undef c02_01_re
-#undef c02_01_im
-#undef c10_01_re
-#undef c10_01_im
-#undef c11_01_re
-#undef c11_01_im
-#undef c12_01_re
-#undef c12_01_im
-#undef c10_02_re
-#undef c10_02_im
-#undef c11_02_re
-#undef c11_02_im
-#undef c12_02_re
-#undef c12_02_im
-#undef c11_10_re
-#undef c11_10_im
-#undef c12_10_re
-#undef c12_10_im
-#undef c12_11_re
-#undef c12_11_im
 #undef c01_01_re
-#undef c01_00_re
-#undef c01_00_im
-#undef c02_00_re
-#undef c02_00_im
-#undef c10_00_re
-#undef c10_00_im
-#undef c11_00_re
-#undef c11_00_im
-#undef c12_00_re
-#undef c12_00_im
-#undef c02_01_re
-#undef c02_01_im
-#undef c10_01_re
-#undef c10_01_im
-#undef c11_01_re
-#undef c11_01_im
-#undef c12_01_re
-#undef c12_01_im
-#undef c10_02_re
-#undef c10_02_im
-#undef c11_02_re
-#undef c11_02_im
-#undef c12_02_re
-#undef c12_02_im
-#undef c11_10_re
-#undef c11_10_im
-#undef c12_10_re
-#undef c12_10_im
-#undef c12_11_re
-#undef c12_11_im
 #undef c02_02_re
-#undef c01_00_re
-#undef c01_00_im
-#undef c02_00_re
-#undef c02_00_im
-#undef c10_00_re
-#undef c10_00_im
-#undef c11_00_re
-#undef c11_00_im
-#undef c12_00_re
-#undef c12_00_im
-#undef c02_01_re
-#undef c02_01_im
-#undef c10_01_re
-#undef c10_01_im
-#undef c11_01_re
-#undef c11_01_im
-#undef c12_01_re
-#undef c12_01_im
-#undef c10_02_re
-#undef c10_02_im
-#undef c11_02_re
-#undef c11_02_im
-#undef c12_02_re
-#undef c12_02_im
-#undef c11_10_re
-#undef c11_10_im
-#undef c12_10_re
-#undef c12_10_im
-#undef c12_11_re
-#undef c12_11_im
 #undef c10_10_re
-#undef c01_00_re
-#undef c01_00_im
-#undef c02_00_re
-#undef c02_00_im
-#undef c10_00_re
-#undef c10_00_im
-#undef c11_00_re
-#undef c11_00_im
-#undef c12_00_re
-#undef c12_00_im
-#undef c02_01_re
-#undef c02_01_im
-#undef c10_01_re
-#undef c10_01_im
-#undef c11_01_re
-#undef c11_01_im
-#undef c12_01_re
-#undef c12_01_im
-#undef c10_02_re
-#undef c10_02_im
-#undef c11_02_re
-#undef c11_02_im
-#undef c12_02_re
-#undef c12_02_im
-#undef c11_10_re
-#undef c11_10_im
-#undef c12_10_re
-#undef c12_10_im
-#undef c12_11_re
-#undef c12_11_im
 #undef c11_11_re
-#undef c01_00_re
-#undef c01_00_im
-#undef c02_00_re
-#undef c02_00_im
-#undef c10_00_re
-#undef c10_00_im
-#undef c11_00_re
-#undef c11_00_im
-#undef c12_00_re
-#undef c12_00_im
-#undef c02_01_re
-#undef c02_01_im
-#undef c10_01_re
-#undef c10_01_im
-#undef c11_01_re
-#undef c11_01_im
-#undef c12_01_re
-#undef c12_01_im
-#undef c10_02_re
-#undef c10_02_im
-#undef c11_02_re
-#undef c11_02_im
-#undef c12_02_re
-#undef c12_02_im
-#undef c11_10_re
-#undef c11_10_im
-#undef c12_10_re
-#undef c12_10_im
-#undef c12_11_re
-#undef c12_11_im
 #undef c12_12_re
 #undef c01_00_re
 #undef c01_00_im
@@ -2836,3 +2689,4 @@ WRITE_SPINOR(sp_stride);
 #undef c12_11_im
 
 
+#undef VOLATILE

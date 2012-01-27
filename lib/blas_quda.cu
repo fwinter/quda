@@ -238,8 +238,13 @@ double2 __device__ read_Float2(double2 *x, int i) {
   return make_double2(x[i].x, x[i].y);
 }
 
+#if (__CUDA_ARCH__ >= 200 && __CUDA_ARCH__ < 300)
+#define READ_DOUBLE2_TEXTURE(x, i) \
+  read_Float2(x, i)
+#else
 #define READ_DOUBLE2_TEXTURE(x, i) \
   fetch_double2(x##TexDouble2, i)
+#endif
 
 #define READ_FLOAT2_TEXTURE(x, i) \
   tex1Dfetch(x##TexSingle2, i)
@@ -1597,12 +1602,13 @@ void caxpbyCuda(const quda::Complex &a, cudaColorSpinorField &x, const quda::Com
   setBlock(9, length, x.Precision());
   quda::blas_bytes += 3*x.RealLength()*x.Precision();
   quda::blas_flops += 7*x.RealLength();
+
   if (x.Precision() == QUDA_DOUBLE_PRECISION) {
+    double2 a2 = make_double2(real(a), imag(a));
+    double2 b2 = make_double2(real(b), imag(b));
     int spinor_bytes = x.Length()*sizeof(double);
     cudaBindTexture(0, xTexDouble2, x.V(), spinor_bytes); 
     cudaBindTexture(0, yTexDouble2, y.V(), spinor_bytes); 
-    double2 a2 = make_double2(real(a), imag(a));
-    double2 b2 = make_double2(real(b), imag(b));
     caxpbyDKernel<<<blasGrid, blasBlock>>>(a2, (double2*)x.V(), b2, (double2*)y.V(), length);
   } else if (x.Precision() == QUDA_SINGLE_PRECISION) {
     float2 a2 = make_float2(real(a), imag(a));
@@ -1729,11 +1735,11 @@ void cxpaypbzCuda(cudaColorSpinorField &x, const quda::Complex &a, cudaColorSpin
   quda::blas_bytes += 4*x.RealLength()*x.Precision();
   quda::blas_flops += 8*x.RealLength();
   if (x.Precision() == QUDA_DOUBLE_PRECISION) {
+    double2 a2 = make_double2(real(a), imag(a));
+    double2 b2 = make_double2(real(b), imag(b));
     int spinor_bytes = x.Length()*sizeof(double);
     cudaBindTexture(0, xTexDouble2, x.V(), spinor_bytes); 
     cudaBindTexture(0, yTexDouble2, y.V(), spinor_bytes); 
-    double2 a2 = make_double2(real(a), imag(a));
-    double2 b2 = make_double2(real(b), imag(b));
     cxpaypbzDKernel<<<blasGrid, blasBlock>>>((double2*)x.V(), a2, (double2*)y.V(), b2, (double2*)z.V(), length);
   } else if (x.Precision() == QUDA_SINGLE_PRECISION) {
     float2 a2 = make_float2(real(a), imag(a));
@@ -4171,12 +4177,12 @@ void caxpbypzCuda(const quda::Complex &a, cudaColorSpinorField &x, const quda::C
   int length = x.Length()/2;
   setBlock(27, length, x.Precision());
   if (x.Precision() == QUDA_DOUBLE_PRECISION) {
+    double2 a2 = make_double2(real(a), imag(a));
+    double2 b2 = make_double2(real(b), imag(b));
     int spinor_bytes = x.Length()*sizeof(double);
     cudaBindTexture(0, xTexDouble2, x.V(), spinor_bytes); 
     cudaBindTexture(0, yTexDouble2, y.V(), spinor_bytes); 
     cudaBindTexture(0, zTexDouble2, z.V(), spinor_bytes); 
-    double2 a2 = make_double2(real(a), imag(a));
-    double2 b2 = make_double2(real(b), imag(b));
     caxpbypzDKernel<<<blasGrid, blasBlock>>>(a2, (double2*)x.V(), b2, (double2*)y.V(), (double2*)z.V(), length); 
   } else if (x.Precision() == QUDA_SINGLE_PRECISION) {
     float2 a2 = make_float2(real(a), imag(a));

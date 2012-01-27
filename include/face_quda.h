@@ -63,10 +63,11 @@ class FaceBuffer {
   FaceBuffer(const FaceBuffer &);
   virtual ~FaceBuffer();
 
-  void exchangeFacesStart(cudaColorSpinorField &in, int parity,
-			  int dagger, int dir, cudaStream_t *stream);
-  void exchangeFacesComms(int dir);
-  void exchangeFacesWait(cudaColorSpinorField &out, int dagger, int dir);
+  void exchangeFacesPack(cudaColorSpinorField &in, int parity,
+			 int dagger, int dir, cudaStream_t *stream);
+  void exchangeFacesStart(cudaColorSpinorField &in, int dagger, int dir);
+  void exchangeFacesComms(int dir, struct timeval &, cudaEvent_t &);
+  void exchangeFacesWait(cudaColorSpinorField &out, int dagger, int dir, cudaEvent_t &, struct timeval &);
 
   void exchangeCpuSpinor(cpuColorSpinorField &in, int parity, int dagger);
 
@@ -132,10 +133,11 @@ class FaceBuffer {
   FaceBuffer(const FaceBuffer &);
   virtual ~FaceBuffer();
 
-  void exchangeFacesStart(cudaColorSpinorField &in, int parity,
-			  int dagger, int dir, cudaStream_t *stream);
-  void exchangeFacesComms(int dir);
-  void exchangeFacesWait(cudaColorSpinorField &out, int dagger, int dir);
+  void exchangeFacesPack(cudaColorSpinorField &in, int parity,
+			 int dagger, int dir, cudaStream_t *stream);
+  void exchangeFacesStart(cudaColorSpinorField &in, int dagger, int dir);
+  void exchangeFacesComms(int dir, struct timeval &, cudaEvent_t &);
+  void exchangeFacesWait(cudaColorSpinorField &out, int dagger, int dir, cudaEvent_t &, struct timeval &);
 
   void exchangeCpuSpinor(cpuColorSpinorField &in, int parity, int dagger);
 
@@ -149,6 +151,8 @@ extern "C" {
   void exchange_cpu_sitelink(int* X,void** sitelink, void** ghost_sitelink,
 			     void** ghost_sitelink_diag, 
 			     QudaPrecision gPrecision, int optflag); 
+  void exchange_cpu_sitelink_ex(int* X, void** sitelink,
+                                QudaPrecision gPrecision, int optflag);
   void exchange_gpu_staple_start(int* X, void* _cudaStaple, int dir, int whichway,  cudaStream_t * stream);
   void exchange_gpu_staple_comms(int* X, void* _cudaStaple, int dir, int whichway, cudaStream_t * stream);
   void exchange_gpu_staple_wait(int* X, void* _cudaStaple, int dir, int whichway, cudaStream_t * stream);
@@ -156,7 +160,7 @@ extern "C" {
   void exchange_gpu_staple(int* X, void* _cudaStaple, cudaStream_t * stream);
   void exchange_cpu_staple(int* X, void* staple, void** ghost_staple,
 			   QudaPrecision gPrecision);
-  void exchange_llfat_init(FullStaple* cudaStaple);
+  void exchange_llfat_init(QudaPrecision prec);
   void exchange_llfat_cleanup(void);
 
 #ifdef __cplusplus

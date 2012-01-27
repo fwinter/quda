@@ -1,5 +1,5 @@
 #include <read_gauge.h>
-#include <gauge_quda.h>
+#include <gauge_field.h>
 
 #include "gauge_force_quda.h"
 
@@ -371,32 +371,6 @@ gauge_force_init_cuda(QudaGaugeParam* param, int path_max_length)
         }                                                               \
     }while(0)
 
-#define GF_COMPUTE_RECONSTRUCT_SIGN(sign, dir, i1,i2,i3,i4) do {	\
-        sign =1;							\
-        switch(dir){							\
-        case XUP:							\
-            if ( (i4 & 1) == 1){					\
-	      sign = 1;							\
-            }								\
-            break;							\
-        case YUP:							\
-            if ( ((i4+i1) & 1) == 1){					\
-                sign = 1;						\
-            }								\
-            break;							\
-        case ZUP:							\
-            if ( ((i4+i1+i2) & 1) == 1){				\
-                sign = 1;						\
-            }								\
-            break;							\
-        case TUP:							\
-            if (i4 == X4m1 ){						\
-                sign = 1;						\
-            }								\
-            break;							\
-        }								\
-    }while (0)
-
 
 
 //for now we only consider 12-reconstruct and single precision
@@ -422,7 +396,7 @@ parity_compute_gauge_force_kernel(float2* momEven, float2* momOdd,
     int x1 = 2*x1h + x1odd;  
     int X = 2*sid + x1odd;
     
-    int sign = 1;
+    const int sign = 1;
     
     float2* mymom=momEven;
     if (oddBit){
@@ -470,7 +444,6 @@ parity_compute_gauge_force_kernel(float2* momEven, float2* momOdd,
 	    LOAD_EVEN_MATRIX( lnkdir, nbr_idx, LINKB);
 	}
 	
-	GF_COMPUTE_RECONSTRUCT_SIGN(sign, lnkdir, new_x1, new_x2, new_x3, new_x4);
 	RECONSTRUCT_MATRIX(lnkdir, nbr_idx, sign, linkb);
 	if (GOES_FORWARDS(path0)){
 	    COPY_SU3_MATRIX(linkb, linka);
@@ -499,7 +472,6 @@ parity_compute_gauge_force_kernel(float2* momEven, float2* momOdd,
 	    }else{
 		LOAD_EVEN_MATRIX(lnkdir, nbr_idx, LINKB);
 	    }
-	    GF_COMPUTE_RECONSTRUCT_SIGN(sign, lnkdir, new_x1, new_x2, new_x3, new_x4);
 	    RECONSTRUCT_MATRIX(lnkdir, nbr_idx, sign, linkb);
 	    if (GOES_FORWARDS(pathj)){
 	      MULT_SU3_NN_TEST(linka, linkb);
@@ -523,7 +495,6 @@ parity_compute_gauge_force_kernel(float2* momEven, float2* momOdd,
     }else{
 	LOAD_EVEN_MATRIX(dir, sid, LINKA);
     }
-    GF_COMPUTE_RECONSTRUCT_SIGN(sign, dir, x1, x2, x3, x4);
     RECONSTRUCT_MATRIX(dir, sid, sign, linka);
     MULT_SU3_NN_TEST(linka, staple);
     LOAD_ANTI_HERMITIAN(mymom, dir, sid, AH);
@@ -537,7 +508,7 @@ parity_compute_gauge_force_kernel(float2* momEven, float2* momOdd,
 }
 
 void
-gauge_force_cuda(FullMom  cudaMom, int dir, double eb3, FullGauge cudaSiteLink,
+gauge_force_cuda(cudaGaugeField&  cudaMom, int dir, double eb3, cudaGaugeField& cudaSiteLink,
                  QudaGaugeParam* param, int** input_path, 
 		 int* length, void* path_coeff, int num_paths, int max_length)
 {
@@ -586,18 +557,18 @@ gauge_force_cuda(FullMom  cudaMom, int dir, double eb3, FullGauge cudaSiteLink,
     dim3 gridDim(volume/blockDim.x, 1, 1);
     dim3 halfGridDim(volume/(2*blockDim.x), 1, 1);
     
-    float2* momEven = (float2*)cudaMom.even;
-    float2* momOdd = (float2*)cudaMom.odd;
-    float4* linkEven = (float4*)cudaSiteLink.even;
-    float4* linkOdd = (float4*)cudaSiteLink.odd;        
+    float2* momEven = (float2*)cudaMom.Even_p();
+    float2* momOdd = (float2*)cudaMom.Odd_p();
+    float4* linkEven = (float4*)cudaSiteLink.Even_p();
+    float4* linkOdd = (float4*)cudaSiteLink.Odd_p();        
 
-    cudaBindTexture(0, siteLink0TexSingle_recon, cudaSiteLink.even, cudaSiteLink.bytes);
-    cudaBindTexture(0, siteLink1TexSingle_recon, cudaSiteLink.odd, cudaSiteLink.bytes);
+    cudaBindTexture(0, siteLink0TexSingle_recon, cudaSiteLink.Even_p(), cudaSiteLink.Bytes());
+    cudaBindTexture(0, siteLink1TexSingle_recon, cudaSiteLink.Odd_p(), cudaSiteLink.Bytes());
     parity_compute_gauge_force_kernel<0><<<halfGridDim, blockDim>>>(momEven, momOdd,
-								  dir, eb3,
-								  linkEven, linkOdd, 
-								  input_path_d, length_d, (float*)path_coeff_d,
-								  num_paths);   
+								    dir, eb3,
+								    linkEven, linkOdd, 
+								    input_path_d, length_d, (float*)path_coeff_d,
+								    num_paths);   
     //odd
     /* The reason we do not switch the even/odd function input paramemters and the texture binding
      * is that we use the oddbit to decided where to load, in the kernel function

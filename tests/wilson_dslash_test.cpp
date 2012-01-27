@@ -33,7 +33,7 @@ const int transfer = 0; // include transfer time in the benchmark?
 
 const int loops = 100;
 
-bool tune = true;
+extern bool tune;
 
 QudaPrecision cpu_prec = QUDA_DOUBLE_PRECISION;
 QudaPrecision cuda_prec;
@@ -48,7 +48,7 @@ void *hostGauge[4], *hostClover, *hostCloverInv;
 
 Dirac *dirac;
 
-
+extern int device;
 extern int xdim;
 extern int ydim;
 extern int zdim;
@@ -211,8 +211,7 @@ void init(int argc, char **argv) {
   }
   printfQuda("done.\n"); fflush(stdout);
   
-  int dev = 0;
-  initQuda(dev);
+  initQuda(device);
 
   printfQuda("Sending gauge field to GPU\n");
   loadGaugeQuda(hostGauge, &gauge_param);
@@ -263,7 +262,7 @@ void init(int argc, char **argv) {
     bool pc = (test_type != 2);
     DiracParam diracParam;
     setDiracParam(diracParam, &inv_param, pc);
-    diracParam.verbose = QUDA_DEBUG_VERBOSE;
+    diracParam.verbose = QUDA_VERBOSE;
     diracParam.tmp1 = tmp1;
     diracParam.tmp2 = tmp2;
     
@@ -313,8 +312,8 @@ double dslashCUDA() {
 
   cudaEvent_t start, end;
   cudaEventCreate(&start);
+  cudaEventCreate(&end);
   cudaEventRecord(start, 0);
-  cudaEventSynchronize(start);
 
   for (int i = 0; i < loops; i++) {
     switch (test_type) {
@@ -336,7 +335,6 @@ double dslashCUDA() {
     }
   }
     
-  cudaEventCreate(&end);
   cudaEventRecord(end, 0);
   cudaEventSynchronize(end);
   float runTime;
@@ -352,6 +350,10 @@ double dslashCUDA() {
     printfQuda("with ERROR: %s\n", cudaGetErrorString(stat));
 
   printfQuda("done.\n\n");
+
+#ifdef DSLASH_PROFILING
+  printDslashProfile();
+#endif
 
   return secs;
 }
@@ -478,8 +480,8 @@ int main(int argc, char **argv)
       gauge_floats += test_type ? 72*2 : 72;
     }
     printfQuda("GFLOPS = %f\n", 1.0e-9*flops/secs);
-    printfQuda("GiB/s = %f\n\n", 
-	       Vh*(spinor_floats+gauge_floats)*inv_param.cuda_prec/((secs/loops)*(1<<30)));
+    printfQuda("GB/s = %f\n\n", 
+	       Vh*(spinor_floats+gauge_floats)*inv_param.cuda_prec/((secs/loops)*1e+9));
     
     if (!transfer) {
       double norm2_cpu = norm2(*spinorRef);

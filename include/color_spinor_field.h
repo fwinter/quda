@@ -232,8 +232,8 @@ class ColorSpinorField {
 
   int GhostLength() const { return ghost_length; }
   const int *GhostFace() const { return ghostFace; }  
-  int GhostOffset(const int i) const { return ghostFace[i]; }  
-  int GhostNormOffset(const int i ) const { return ghostFace[i]; }  
+  int GhostOffset(const int i) const { return ghostOffset[i]; }  
+  int GhostNormOffset(const int i ) const { return ghostNormOffset[i]; }  
 
   friend std::ostream& operator<<(std::ostream &out, const ColorSpinorField &);
   friend class ColorSpinorParam;
@@ -280,9 +280,10 @@ class cudaColorSpinorField : public ColorSpinorField {
   void allocateGhostBuffer(void);
   static void freeGhostBuffer(void);
 
-  void packGhost(void* ghost_spinor, const int dim, 
-		 const QudaDirection dir, const QudaParity parity, 
+  void packGhost(const int dim, const QudaDirection dir, const QudaParity parity, 
 		 const int dagger, cudaStream_t* stream);
+  void sendGhost(void *ghost_spinor, const int dim, const QudaDirection dir,
+		 const int dagger, cudaStream_t *stream);
   void unpackGhost(void* ghost_spinor, const int dim, const QudaDirection dir, 
 		   const int dagger, cudaStream_t* stream);
 

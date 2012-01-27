@@ -54,21 +54,8 @@ extern "C" {
     double tadpole_coeff;
   } FullGauge;
 
-  typedef struct {
-    size_t bytes;
-    QudaPrecision precision;
-    int length; // total length
-    int volume; // geometric volume (single parity)
-    int X[QUDA_MAX_DIM]; // the geometric lengths (single parity)
-    int Nc; // number of colors
-    ParityGauge odd;
-    ParityGauge even;
-    int pad;
-    int stride;
-    double anisotropy;
-  } FullStaple;
   
-  typedef struct {
+  /*  typedef struct {
     size_t bytes;
     QudaPrecision precision;
     int length; // total length
@@ -78,7 +65,7 @@ extern "C" {
     ParityGauge odd;
     ParityGauge even;
     double anisotropy;
-  } FullMom;
+    } FullMom;*/
       
   // replace below with ColorSpinorField
   typedef struct {
@@ -97,9 +84,29 @@ extern "C" {
     ParityHw odd;
     ParityHw even;
   } FullHw;
+
+  extern cudaDeviceProp deviceProp;
   
 #ifdef __cplusplus
 }
 #endif
+
+class TuneParam {
+
+ public:
+  dim3 block;
+  int shared_bytes;
+
+  TuneParam() : block(32, 1, 1), shared_bytes(0) { ; }
+  TuneParam(const TuneParam &param) : block(param.block), shared_bytes(param.shared_bytes) { ; }
+  TuneParam& operator=(const TuneParam &param) {
+    if (&param != this) {
+      block = param.block;
+      shared_bytes = param.shared_bytes;
+    }
+    return *this;
+  }
+
+};
 
 #endif // _QUDA_INTERNAL_H

@@ -16,6 +16,13 @@ using namespace std;
 #define GPU_DIRECT
 #endif
 
+#ifdef DSLASH_PROFILING
+  void printDslashProfile();
+#define CUDA_EVENT_RECORD(a,b) cudaEventRecord(a,b)
+#else
+#define CUDA_EVENT_RECORD(a,b)
+#define DSLASH_TIME_PROFILE()
+#endif
 
 cudaStream_t *stream;
 
@@ -154,83 +161,102 @@ FaceBuffer::~FaceBuffer()
   }
 }
 
-void FaceBuffer::exchangeFacesStart(cudaColorSpinorField &in, int parity,
-				    int dagger, int dir, cudaStream_t *stream_p)
+void FaceBuffer::exchangeFacesPack(cudaColorSpinorField &in, int parity,
+				   int dagger, int dir, cudaStream_t *stream_p)
 {
-  if(!commDimPartitioned(dir)){
-    return ;
-  }
+  int dim = dir/2;
+  if(!commDimPartitioned(dim)) return;
 
-  in.allocateGhostBuffer();   // allocate the ghost buffer if not yet allocated
-  
+  in.allocateGhostBuffer();   // allocate the ghost buffer if not yet allocated  
   stream = stream_p;
-  
-  int back_nbr[4] = {X_BACK_NBR, Y_BACK_NBR, Z_BACK_NBR,T_BACK_NBR};
-  int fwd_nbr[4] = {X_FWD_NBR, Y_FWD_NBR, Z_FWD_NBR,T_FWD_NBR};
-  int uptags[4] = {XUP, YUP, ZUP, TUP};
-  int downtags[4] = {XDOWN, YDOWN, ZDOWN, TDOWN};
-  
-  // Prepost all receives
-  recv_request1[dir] = comm_recv_with_tag(pageable_back_nbr_spinor[dir], nbytes[dir], back_nbr[dir], uptags[dir]);
-  recv_request2[dir] = comm_recv_with_tag(pageable_fwd_nbr_spinor[dir], nbytes[dir], fwd_nbr[dir], downtags[dir]);
-  
-  // gather for backwards send
-  in.packGhost(back_nbr_spinor_sendbuf[dir], dir, QUDA_BACKWARDS, 
-	       (QudaParity)parity, dagger, &stream[2*dir + sendBackStrmIdx]); CUERR;  
-  
-  // gather for forwards send
-  in.packGhost(fwd_nbr_spinor_sendbuf[dir], dir, QUDA_FORWARDS, 
-	       (QudaParity)parity, dagger, &stream[2*dir + sendFwdStrmIdx]); CUERR;
+
+  if (dir%2==0){ // backwards send
+    int back_nbr[4] = {X_BACK_NBR, Y_BACK_NBR, Z_BACK_NBR,T_BACK_NBR};
+    int uptags[4] = {XUP, YUP, ZUP, TUP};
+    // Prepost all receives
+    recv_request1[dim] = comm_recv_with_tag(pageable_back_nbr_spinor[dim], nbytes[dim], back_nbr[dim], uptags[dim]);
+    
+    // gather for backwards send
+    in.packGhost(dim, QUDA_BACKWARDS, (QudaParity)parity, dagger, &stream[2*dim + sendBackStrmIdx]);
+  } else { // forwards send
+    int fwd_nbr[4] = {X_FWD_NBR, Y_FWD_NBR, Z_FWD_NBR,T_FWD_NBR};
+    int downtags[4] = {XDOWN, YDOWN, ZDOWN, TDOWN};
+    recv_request2[dim] = comm_recv_with_tag(pageable_fwd_nbr_spinor[dim], nbytes[dim], fwd_nbr[dim], downtags[dim]);
+    
+    // gather for forwards send
+    in.packGhost(dim, QUDA_FORWARDS, (QudaParity)parity, dagger, &stream[2*dim + sendFwdStrmIdx]);
+  }
 }
 
-void FaceBuffer::exchangeFacesComms(int dir) 
+void FaceBuffer::exchangeFacesStart(cudaColorSpinorField &in, int dagger, int dir)
 {
-  
-  if(!commDimPartitioned(dir)){
-    return;
+  int dim = dir/2;
+  if(!commDimPartitioned(dim)) return;
+
+  if (dir%2==0){ // backwards send
+    in.sendGhost(back_nbr_spinor_sendbuf[dim], dim, QUDA_BACKWARDS, dagger, &stream[2*dim + sendBackStrmIdx]);
+  } else { // forwards send
+    in.sendGhost(fwd_nbr_spinor_sendbuf[dim], dim, QUDA_FORWARDS, dagger, &stream[2*dim + sendFwdStrmIdx]); 
   }
+}
 
-  int back_nbr[4] = {X_BACK_NBR, Y_BACK_NBR, Z_BACK_NBR,T_BACK_NBR};
-  int fwd_nbr[4] = {X_FWD_NBR, Y_FWD_NBR, Z_FWD_NBR,T_FWD_NBR};
-  int uptags[4] = {XUP, YUP, ZUP, TUP};
-  int downtags[4] = {XDOWN, YDOWN, ZDOWN, TDOWN};
+void FaceBuffer::exchangeFacesComms(int dir, struct timeval &commsStart, cudaEvent_t &gatherEnd) { 
+  int dim = dir / 2;
+  if(!commDimPartitioned(dim)) return;
 
-
-  cudaStreamSynchronize(stream[2*dir + sendBackStrmIdx]); //required the data to be there before sending out
+  if (dir %2 == 0) {
+    int back_nbr[4] = {X_BACK_NBR, Y_BACK_NBR, Z_BACK_NBR,T_BACK_NBR};
+    int downtags[4] = {XDOWN, YDOWN, ZDOWN, TDOWN};
+    //cudaStreamSynchronize(stream[2*dim + sendBackStrmIdx]); //required the data to be there before sending out
+    while (cudaErrorNotReady == cudaEventQuery(gatherEnd));
+    gettimeofday(&commsStart, NULL);
 #ifndef GPU_DIRECT
-  memcpy(pageable_back_nbr_spinor_sendbuf[dir], back_nbr_spinor_sendbuf[dir], nbytes[dir]);
+    memcpy(pageable_back_nbr_spinor_sendbuf[dim], back_nbr_spinor_sendbuf[dim], nbytes[dim]);
 #endif
-  send_request2[dir] = comm_send_with_tag(pageable_back_nbr_spinor_sendbuf[dir], nbytes[dir], back_nbr[dir], downtags[dir]);
-    
-  cudaStreamSynchronize(stream[2*dir + sendFwdStrmIdx]); //required the data to be there before sending out
+    send_request2[dim] = comm_send_with_tag(pageable_back_nbr_spinor_sendbuf[dim], nbytes[dim], back_nbr[dim], downtags[dim]);
+  } else {
+    int fwd_nbr[4] = {X_FWD_NBR, Y_FWD_NBR, Z_FWD_NBR,T_FWD_NBR};
+    int uptags[4] = {XUP, YUP, ZUP, TUP};
+    //cudaStreamSynchronize(stream[2*dim + sendFwdStrmIdx]); //required the data to be there before sending out
+    while (cudaErrorNotReady == cudaEventQuery(gatherEnd));
+    gettimeofday(&commsStart, NULL);
 #ifndef GPU_DIRECT
-  memcpy(pageable_fwd_nbr_spinor_sendbuf[dir], fwd_nbr_spinor_sendbuf[dir], nbytes[dir]);
+    memcpy(pageable_fwd_nbr_spinor_sendbuf[dim], fwd_nbr_spinor_sendbuf[dim], nbytes[dim]);
 #endif
-  send_request1[dir]= comm_send_with_tag(pageable_fwd_nbr_spinor_sendbuf[dir], nbytes[dir], fwd_nbr[dir], uptags[dir]);
-  
+    send_request1[dim]= comm_send_with_tag(pageable_fwd_nbr_spinor_sendbuf[dim], nbytes[dim], fwd_nbr[dim], uptags[dim]);
+  }
 } 
 
 
-void FaceBuffer::exchangeFacesWait(cudaColorSpinorField &out, int dagger, int dir)
+void FaceBuffer::exchangeFacesWait(cudaColorSpinorField &out, int dagger, int dir, 
+				   cudaEvent_t &scatterStart, struct timeval &commsEnd)
 {
-  if(!commDimPartitioned(dir)){
-    return;
-  }
+  int dim = dir / 2;
+  if(!commDimPartitioned(dim)) return;
+
   
-  comm_wait(recv_request2[dir]);  
-  comm_wait(send_request2[dir]);
+  if (dir%2 == 0) {
+    comm_wait(recv_request2[dim]);  
+    comm_wait(send_request2[dim]);
 #ifndef GPU_DIRECT
-  memcpy(fwd_nbr_spinor[dir], pageable_fwd_nbr_spinor[dir], nbytes[dir]);
+    memcpy(fwd_nbr_spinor[dim], pageable_fwd_nbr_spinor[dim], nbytes[dim]);
 #endif
-  out.unpackGhost(fwd_nbr_spinor[dir], dir, QUDA_FORWARDS,  dagger, &stream[2*dir + recFwdStrmIdx]); CUERR;
+    gettimeofday(&commsEnd, NULL);
 
-  comm_wait(recv_request1[dir]);
-  comm_wait(send_request1[dir]);
-
+    CUDA_EVENT_RECORD(scatterStart, stream[2*dim+recFwdStrmIdx]);
+    out.unpackGhost(fwd_nbr_spinor[dim], dim, QUDA_FORWARDS,  dagger, &stream[2*dim + recFwdStrmIdx]); CUERR;
+  } else {
+    comm_wait(recv_request1[dim]);
+    comm_wait(send_request1[dim]);
+    
 #ifndef GPU_DIRECT
-  memcpy(back_nbr_spinor[dir], pageable_back_nbr_spinor[dir], nbytes[dir]);  
+    memcpy(back_nbr_spinor[dim], pageable_back_nbr_spinor[dim], nbytes[dim]);  
 #endif
-  out.unpackGhost(back_nbr_spinor[dir], dir, QUDA_BACKWARDS,  dagger, &stream[2*dir + recBackStrmIdx]); CUERR;
+    gettimeofday(&commsEnd, NULL);
+
+    CUDA_EVENT_RECORD(scatterStart, stream[2*dim+recBackStrmIdx]);
+    out.unpackGhost(back_nbr_spinor[dim], dim, QUDA_BACKWARDS,  dagger, &stream[2*dim + recBackStrmIdx]); CUERR;
+  }
 }
 
 void FaceBuffer::exchangeCpuSpinor(cpuColorSpinorField &spinor, int oddBit, int dagger)
@@ -336,7 +362,7 @@ void commBarrier() { comm_barrier(); }
 
 #define gaugeSiteSize 18
 
-#if (CUDA_VERSION < 4000)
+#ifdef GPU_DIRECT
 static void* fwd_nbr_staple_cpu[4];
 static void* back_nbr_staple_cpu[4];
 static void* fwd_nbr_staple_sendbuf_cpu[4];
@@ -363,7 +389,7 @@ static unsigned long llfat_recv_request1[4];
 static unsigned long llfat_send_request2[4];
 static unsigned long llfat_recv_request2[4];
 
-#include <gauge_quda.h>
+#include "gauge_field.h"
 extern void setup_dims_in_gauge(int *XX);
 
 static void
@@ -395,7 +421,7 @@ setup_dims(int* X)
 }
 
 void 
-exchange_llfat_init(FullStaple* cudaStaple)
+exchange_llfat_init(QudaPrecision prec)
 {
   static int initialized = 0;
   if (initialized){
@@ -403,7 +429,6 @@ exchange_llfat_init(FullStaple* cudaStaple)
   }
   initialized = 1;
   
-  QudaPrecision prec = cudaStaple->precision;
 
   for(int i=0;i < 4; i++){
     cudaMalloc((void**)&fwd_nbr_staple_gpu[i], Vs[i]*gaugeSiteSize*prec);
@@ -419,7 +444,7 @@ exchange_llfat_init(FullStaple* cudaStaple)
   
   CUERR;
 
-#if (CUDA_VERSION < 4000)
+#ifdef GPU_DIRECT
   for(int i=0;i < 4; i++){
     fwd_nbr_staple_cpu[i] = malloc(Vs[i]*gaugeSiteSize*prec);
     back_nbr_staple_cpu[i] = malloc(Vs[i]*gaugeSiteSize*prec);
@@ -556,7 +581,7 @@ exchange_sitelink(int*X, Float** sitelink, Float** ghost_sitelink, Float** ghost
   int nFace =1;
   for(int dir=0; dir < 4; dir++){
     if(optflag && !commDimPartitioned(dir)) continue;
-    pack_ghost_all_links((void**)sitelink, (void**)sitelink_back_sendbuf, (void**)sitelink_fwd_sendbuf, dir, nFace, (QudaPrecision)(sizeof(Float)));
+    pack_ghost_all_links((void**)sitelink, (void**)sitelink_back_sendbuf, (void**)sitelink_fwd_sendbuf, dir, nFace, (QudaPrecision)(sizeof(Float)), X);
   }
 #endif
 
@@ -594,7 +619,6 @@ void exchange_cpu_sitelink(int* X,
 			   QudaPrecision gPrecision, int optflag)
 {  
   setup_dims(X);
-  set_dim(X);
   void*  sitelink_fwd_sendbuf[4];
   void*  sitelink_back_sendbuf[4];
   
@@ -625,9 +649,290 @@ void exchange_cpu_sitelink(int* X,
 
 
 
+/* This function exchange the sitelink and store them in the correspoinding portion of 
+ * the extended sitelink memory region
+ * @sitelink: this is stored according to dimension size (X1+4) (X2+4) (X3+4) (X4+4)
+ */
+
+void exchange_cpu_sitelink_ex(int* X, void** sitelink, 
+			      QudaPrecision gPrecision, int optflag)
+{
+  
+  int X1,X2,X3,X4;
+  int E1,E2,E3,E4;  
+  X1 = X[0]; X2 = X[1]; X3 = X[2]; X4 = X[3]; 
+  E1 = X[0]+4; E2 = X[1]+4; E3 = X[2]+4; E4 = X[3]+4; 
+  int E3E2E1=E3*E2*E1;
+  int E2E1=E2*E1;
+  int E4E3E2=E4*E3*E2;
+  int E3E2=E3*E2;
+  int E4E3E1=E4*E3*E1;
+  int E3E1=E3*E1;
+  int E4E2E1=E4*E2*E1;
+  int Vh_ex = E4*E3*E2*E1/2;
+  
+  //...............x.........y.....z......t
+  int starta[] = {2,      2,       2,     0};
+  int enda[]   = {X4+2,   X4+2,    X4+2,  X3+4};
+  
+  int startb[] = {2,      2,       0,     0};
+  int endb[]   = {X3+2,   X3+2,    X2+4,  X2+4};
+  
+  int startc[] = {2,      0,       0,     0};
+  int endc[]   = {X2+2,   X1+4,    X1+4,  X1+4};
+  
+  int f_main[4][4] = {
+    {E3E2E1,    E2E1, E1,     1},
+    {E3E2E1,    E2E1,    1,  E1},
+    {E3E2E1,  E1,    1,    E2E1},
+    {E2E1,  E1,    1,   E3E2E1}
+  };  
+  
+  int f_bound[4][4]={
+    {E3E2, E2, 1, E4E3E2},
+    {E3E1, E1, 1, E4E3E1}, 
+    {E2E1, E1, 1, E4E2E1},
+    {E2E1, E1, 1, E3E2E1}
+  };
+  
+  int nslices = 2;
+  int slice_3d[] = { E4E3E2, E4E3E1, E4E2E1, E3E2E1};  
+  int len[4];
+  for(int i=0;i < 4;i++){
+    len[i] = slice_3d[i] * nslices* 4*gaugeSiteSize*gPrecision; //2 slices, 4 directions' links
+  }
+  void* ghost_sitelink_fwd_sendbuf[4];
+  void* ghost_sitelink_back_sendbuf[4];
+  void* ghost_sitelink_fwd[4];
+  void* ghost_sitelink_back[4];  
+  for(int i=0;i < 4;i++){    
+    if(!commDimPartitioned(i)) continue;
+    ghost_sitelink_fwd_sendbuf[i] = malloc(len[i]);
+    ghost_sitelink_back_sendbuf[i] = malloc(len[i]);
+    if(ghost_sitelink_fwd_sendbuf[i] == NULL || ghost_sitelink_back_sendbuf[i] == NULL){
+      errorQuda("Error: malloc for ghost sitelink send buffer failed\n");
+    } 
+
+    ghost_sitelink_fwd[i] = malloc(len[i]);
+    ghost_sitelink_back[i] = malloc(len[i]);
+    if(ghost_sitelink_fwd[i] == NULL || ghost_sitelink_back[i] == NULL){
+      errorQuda("Error: malloc for ghost sitelink failed\n");
+    } 
+    
+  }
+
+  int back_nbr[4] = {X_BACK_NBR, Y_BACK_NBR, Z_BACK_NBR,T_BACK_NBR};
+  int fwd_nbr[4] = {X_FWD_NBR, Y_FWD_NBR, Z_FWD_NBR,T_FWD_NBR};
+  int uptags[4] = {XUP, YUP, ZUP, TUP};
+  int downtags[4] = {XDOWN, YDOWN, ZDOWN, TDOWN};
+  unsigned long recv_request1[4], recv_request2[4];
+  unsigned long send_request1[4], send_request2[4];
+  
+  int gaugebytes = gaugeSiteSize*gPrecision;
+  int a, b, c,d;
+  for(int dir =0;dir < 4;dir++){
+    if(commDimPartitioned(dir)){
+      //fill the sendbuf here
+      //back
+      for(d=2; d < 4; d++)
+	for(a=starta[dir];a < enda[dir]; a++)
+	  for(b=startb[dir]; b < endb[dir]; b++)
+	    for (c=startc[dir]; c < endc[dir]; c++){
+	      int oddness = (a+b+c+d)%2;
+	      int src_idx = ( a*f_main[dir][0] + b*f_main[dir][1]+ c*f_main[dir][2] + d*f_main[dir][3])>> 1;
+	      int dst_idx = ( a*f_bound[dir][0] + b*f_bound[dir][1]+ c*f_bound[dir][2] + (d-2)*f_bound[dir][3])>> 1;
+	      if(oddness){
+		src_idx += Vh_ex;
+		dst_idx += nslices*slice_3d[dir]/2;
+	      }
+	      for(int linkdir=0; linkdir<4;linkdir++){
+		char* src = (char*)sitelink[linkdir];
+		char* dst = ((char*)(ghost_sitelink_back_sendbuf[dir])) + linkdir*nslices*slice_3d[dir]*gaugebytes;		
+		memcpy(dst + dst_idx * gaugebytes, src+src_idx*gaugebytes, gaugebytes);
+	      }//linkdir
+	    }//c
+      
+      //fwd
+      for(d=X[dir]; d < X[dir]+2; d++)
+	for(a=starta[dir];a < enda[dir]; a++)
+	  for(b=startb[dir]; b < endb[dir]; b++)
+	    for (c=startc[dir]; c < endc[dir]; c++){
+	      int oddness = (a+b+c+d)%2;
+	      int src_idx = ( a*f_main[dir][0] + b*f_main[dir][1]+ c*f_main[dir][2] + d*f_main[dir][3])>> 1;
+	      int dst_idx = ( a*f_bound[dir][0] + b*f_bound[dir][1]+ c*f_bound[dir][2] + (d-X[dir])*f_bound[dir][3])>> 1;
+	      if(oddness){
+		src_idx += Vh_ex;
+		dst_idx += nslices*slice_3d[dir]/2;
+	      }
+	      for(int linkdir=0; linkdir<4;linkdir++){
+		char* src = (char*)sitelink[linkdir];
+		char* dst = ((char*)(ghost_sitelink_fwd_sendbuf[dir])) + linkdir*nslices*slice_3d[dir]*gaugebytes;
+		memcpy(dst + dst_idx * gaugebytes, src+src_idx*gaugebytes, gaugebytes);
+	      }//linkdir	
+	    }//c
+      
+      recv_request1[dir] = comm_recv_with_tag(ghost_sitelink_back[dir], len[dir], back_nbr[dir], uptags[dir]);
+      recv_request2[dir] = comm_recv_with_tag(ghost_sitelink_fwd[dir], len[dir], fwd_nbr[dir], downtags[dir]);
+      send_request1[dir] = comm_send_with_tag(ghost_sitelink_fwd_sendbuf[dir], len[dir], fwd_nbr[dir], uptags[dir]);
+      send_request2[dir] = comm_send_with_tag(ghost_sitelink_back_sendbuf[dir], len[dir], back_nbr[dir], downtags[dir]);    
+      
+      //need the messages to be here before we can send the next messages
+      comm_wait(recv_request1[dir]);
+      comm_wait(recv_request2[dir]);
+      comm_wait(send_request1[dir]);
+      comm_wait(send_request2[dir]);
+    }//if
+
+    //use the messages to fill the sitelink data
+    //back
+    if (dir < 3 ){
+      for(d=0; d < 2; d++)
+	for(a=starta[dir];a < enda[dir]; a++)
+	  for(b=startb[dir]; b < endb[dir]; b++)
+	    for (c=startc[dir]; c < endc[dir]; c++){
+	      int oddness = (a+b+c+d)%2;
+	      int dst_idx = ( a*f_main[dir][0] + b*f_main[dir][1]+ c*f_main[dir][2] + d*f_main[dir][3])>> 1;
+	      int src_idx;
+	      if(commDimPartitioned(dir)){
+		src_idx = ( a*f_bound[dir][0] + b*f_bound[dir][1]+ c*f_bound[dir][2] + d*f_bound[dir][3])>> 1;
+	      }else{
+		src_idx = ( a*f_main[dir][0] + b*f_main[dir][1]+ c*f_main[dir][2] + (d+X[dir])*f_main[dir][3])>> 1;
+	      }
+	      if(oddness){
+		if(commDimPartitioned(dir)){
+		  src_idx += nslices*slice_3d[dir]/2;
+		}else{
+		  src_idx += Vh_ex;
+		}
+		dst_idx += Vh_ex;
+	      }
+	      for(int linkdir=0; linkdir < 4; linkdir ++){
+		char* dst = (char*)sitelink[linkdir];
+		char* src;
+		if(commDimPartitioned(dir)){
+		  src= ((char*)(ghost_sitelink_back[dir])) + linkdir*nslices*slice_3d[dir]*gaugebytes;
+		}else{
+		  src = (char*)sitelink[linkdir];
+		}
+		memcpy(dst + dst_idx * gaugebytes, src+src_idx*gaugebytes, gaugebytes);
+	      }//linkdir
+	    }//c    
+    }else{
+      //when dir == 3 (T direction), the data layout format in sitelink and the message is the same, we can do large copys
+      for(int linkdir=0; linkdir < 4; linkdir ++){
+	  char* dst = (char*)sitelink[linkdir];
+	  char* src;
+	  if(commDimPartitioned(dir)){
+	    src = ((char*)(ghost_sitelink_back[dir])) + linkdir*nslices*slice_3d[dir]*gaugebytes;	
+	  }else{
+	    src = (char*)sitelink[linkdir];
+	  }
+	  //even
+	  int dst_idx = 0;
+	  int src_idx;
+	  if(commDimPartitioned(dir)){	  
+	    src_idx = 0;
+	  }else{
+	    src_idx = (X[dir]*f_main[dir][3])>> 1;
+	  }
+	  memcpy(dst + dst_idx * gaugebytes, src+src_idx*gaugebytes, nslices*slice_3d[dir]*gaugebytes/2);
+
+	  //odd
+	  dst_idx = Vh_ex;
+	  if(commDimPartitioned(dir)){	  
+	    src_idx = nslices*slice_3d[dir]/2;
+	  }else{
+	    src_idx = (X[dir]*f_main[dir][3])/2 + Vh_ex;
+	  }
+	  memcpy(dst + dst_idx * gaugebytes, src+src_idx*gaugebytes, nslices*slice_3d[dir]*gaugebytes/2);
+      }      
+
+    }//if
+    
+    //fwd
+    if( dir < 3 ){
+      for(d=X[dir]+2; d < X[dir]+4; d++)
+	for(a=starta[dir];a < enda[dir]; a++)
+	  for(b=startb[dir]; b < endb[dir]; b++)
+	    for (c=startc[dir]; c < endc[dir]; c++){
+	      int oddness = (a+b+c+d)%2;
+	      int dst_idx = ( a*f_main[dir][0] + b*f_main[dir][1]+ c*f_main[dir][2] + d*f_main[dir][3])>> 1;
+	      int src_idx;
+	      if(commDimPartitioned(dir)){
+		src_idx = ( a*f_bound[dir][0] + b*f_bound[dir][1]+ c*f_bound[dir][2] + (d-X[dir]-2)*f_bound[dir][3])>> 1;
+	      }else{
+		src_idx =  ( a*f_main[dir][0] + b*f_main[dir][1]+ c*f_main[dir][2] + (d-X[dir])*f_main[dir][3])>> 1;
+	      }
+	      if(oddness){
+		if(commDimPartitioned(dir)){
+		  src_idx += nslices*slice_3d[dir]/2;
+		}else{
+		  src_idx += Vh_ex;
+		}
+		dst_idx += Vh_ex;
+	      }
+	      for(int linkdir=0; linkdir < 4; linkdir++){
+		char* dst = (char*)sitelink[linkdir];
+		char* src;
+		if(commDimPartitioned(dir)){
+		  src = ((char*)(ghost_sitelink_fwd[dir])) + linkdir*nslices*slice_3d[dir]*gaugebytes;
+		}else{
+		  src = (char*)sitelink[linkdir];
+		}
+		memcpy(dst + dst_idx * gaugebytes, src+src_idx*gaugebytes, gaugebytes);
+	      }//linkdir
+	    }//c
+    }else{
+      //when dir == 3 (T direction), the data layout format in sitelink and the message is the same, we can do large copys
+      for(int linkdir=0; linkdir < 4; linkdir ++){
+	char* dst = (char*)sitelink[linkdir];
+	char* src;
+	if(commDimPartitioned(dir)){
+	  src = ((char*)(ghost_sitelink_fwd[dir])) + linkdir*nslices*slice_3d[dir]*gaugebytes;	
+	}else{
+	  src = (char*)sitelink[linkdir];
+	}
+	//even
+	int dst_idx = ((X[dir]+2)*f_main[dir][3]) >> 1;
+	int src_idx;
+	if(commDimPartitioned(dir)){
+	  src_idx = 0;
+	}else{
+	  src_idx = (2*f_main[dir][3]) >> 1;
+	}
+	memcpy(dst + dst_idx * gaugebytes, src+src_idx*gaugebytes, nslices*slice_3d[dir]*gaugebytes/2);
+	
+	//odd
+	dst_idx = Vh_ex + (((X[dir]+2)*f_main[dir][3]) >> 1);
+	if(commDimPartitioned(dir)){
+	  src_idx = nslices*slice_3d[dir]/2;
+	}else{
+	  src_idx = (2*f_main[dir][3])/2 + Vh_ex;
+	}
+	memcpy(dst + dst_idx * gaugebytes, src+src_idx*gaugebytes, nslices*slice_3d[dir]*gaugebytes/2);
+      }
+      
+    }//if    
+
+  }//dir for loop
+    
+  
+  for(int dir=0;dir < 4;dir++){
+    if(!commDimPartitioned(dir)) continue;
+    free(ghost_sitelink_fwd_sendbuf[dir]);
+    free(ghost_sitelink_back_sendbuf[dir]);    
+    free(ghost_sitelink_fwd[dir]);
+    free(ghost_sitelink_back[dir]);    
+  }
+  
+  
+}
+
+
+
 template<typename Float>
 void
-do_exchange_cpu_staple(Float* staple, Float** ghost_staple, Float** staple_fwd_sendbuf, Float** staple_back_sendbuf)
+do_exchange_cpu_staple(Float* staple, Float** ghost_staple, Float** staple_fwd_sendbuf, Float** staple_back_sendbuf, int* X)
 {
 
 
@@ -661,7 +966,7 @@ do_exchange_cpu_staple(Float* staple, Float** ghost_staple, Float** staple_fwd_s
 #else
   int nFace =1;
   pack_ghost_all_staples_cpu(staple, (void**)staple_back_sendbuf, 
-			     (void**)staple_fwd_sendbuf,  nFace, (QudaPrecision)(sizeof(Float)));
+			     (void**)staple_fwd_sendbuf,  nFace, (QudaPrecision)(sizeof(Float)), X);
 
 #endif  
   
@@ -716,10 +1021,10 @@ void exchange_cpu_staple(int* X,
   
   if (gPrecision == QUDA_DOUBLE_PRECISION){
     do_exchange_cpu_staple((double*)staple, (double**)ghost_staple, 
-			   (double**)staple_fwd_sendbuf, (double**)staple_back_sendbuf);
+			   (double**)staple_fwd_sendbuf, (double**)staple_back_sendbuf, X);
   }else{ //single
     do_exchange_cpu_staple((float*)staple, (float**)ghost_staple, 
-			   (float**)staple_fwd_sendbuf, (float**)staple_back_sendbuf);
+			   (float**)staple_fwd_sendbuf, (float**)staple_back_sendbuf, X);
   }
   
   for(int i=0;i < 4;i++){
@@ -734,10 +1039,18 @@ exchange_gpu_staple_start(int* X, void* _cudaStaple, int dir, int whichway, cuda
 {
   setup_dims(X);
   
-  FullStaple* cudaStaple = (FullStaple*) _cudaStaple;
-  exchange_llfat_init(cudaStaple);
+  cudaGaugeField* cudaStaple = (cudaGaugeField*) _cudaStaple;
+  exchange_llfat_init(cudaStaple->Precision());
   
-  packGhostStaple(cudaStaple, dir, whichway, fwd_nbr_staple_gpu, back_nbr_staple_gpu,
+
+  void* even = cudaStaple->Even_p();
+  void* odd = cudaStaple->Odd_p();
+  int volume = cudaStaple->VolumeCB();
+  QudaPrecision prec = cudaStaple->Precision();
+  int stride = cudaStaple->Stride();
+  
+  packGhostStaple(X, even, odd, volume, prec, stride, 
+		  dir, whichway, fwd_nbr_staple_gpu, back_nbr_staple_gpu,
 		  fwd_nbr_staple_sendbuf, back_nbr_staple_sendbuf, stream);
 }
 
@@ -747,8 +1060,9 @@ exchange_gpu_staple_start(int* X, void* _cudaStaple, int dir, int whichway, cuda
 void
 exchange_gpu_staple_comms(int* X, void* _cudaStaple, int dir, int whichway, cudaStream_t * stream)
 {
-  FullStaple* cudaStaple = (FullStaple*) _cudaStaple;  
-
+  cudaGaugeField* cudaStaple = (cudaGaugeField*) _cudaStaple;  
+  QudaPrecision prec = cudaStaple->Precision();
+  
   int fwd_neighbors[4] = {X_FWD_NBR, Y_FWD_NBR, Z_FWD_NBR, T_FWD_NBR};
   int back_neighbors[4] = {X_BACK_NBR, Y_BACK_NBR, Z_BACK_NBR, T_BACK_NBR};
   int up_tags[4] = {XUP, YUP, ZUP, TUP};
@@ -765,11 +1079,11 @@ exchange_gpu_staple_comms(int* X, void* _cudaStaple, int dir, int whichway, cuda
   
 
   int i = dir;
-  int len = Vs[i]*gaugeSiteSize*cudaStaple->precision;
+  int len = Vs[i]*gaugeSiteSize*prec;
   int normlen = Vs[i]*sizeof(float);
   
   if(recv_whichway == QUDA_BACKWARDS){   
-#if (CUDA_VERSION >= 4000)
+#ifdef GPU_DIRECT
     llfat_recv_request1[i] = comm_recv_with_tag(back_nbr_staple[i], len, back_neighbors[i], up_tags[i]);
     llfat_send_request1[i] = comm_send_with_tag(fwd_nbr_staple_sendbuf[i], len, fwd_neighbors[i],  up_tags[i]);
 #else
@@ -778,7 +1092,7 @@ exchange_gpu_staple_comms(int* X, void* _cudaStaple, int dir, int whichway, cuda
     llfat_send_request1[i] = comm_send_with_tag(fwd_nbr_staple_sendbuf_cpu[i], len, fwd_neighbors[i],  up_tags[i]);
 #endif
   } else { // QUDA_FORWARDS
-#if (CUDA_VERSION >= 4000)
+#ifdef GPU_DIRECT
     llfat_recv_request2[i] = comm_recv_with_tag(fwd_nbr_staple[i], len, fwd_neighbors[i], down_tags[i]);
     llfat_send_request2[i] = comm_send_with_tag(back_nbr_staple_sendbuf[i], len, back_neighbors[i] ,down_tags[i]);
 #else
@@ -795,7 +1109,13 @@ exchange_gpu_staple_comms(int* X, void* _cudaStaple, int dir, int whichway, cuda
 void
 exchange_gpu_staple_wait(int* X, void* _cudaStaple, int dir, int whichway, cudaStream_t * stream)
 {
-  FullStaple* cudaStaple = (FullStaple*) _cudaStaple;  
+  cudaGaugeField* cudaStaple = (cudaGaugeField*) _cudaStaple;  
+
+  void* even = cudaStaple->Even_p();
+  void* odd = cudaStaple->Odd_p();
+  int volume = cudaStaple->VolumeCB();
+  QudaPrecision prec = cudaStaple->Precision();
+  int stride = cudaStaple->Stride();
 
   int recv_whichway;
   if(whichway == QUDA_BACKWARDS){
@@ -806,29 +1126,33 @@ exchange_gpu_staple_wait(int* X, void* _cudaStaple, int dir, int whichway, cudaS
   
 
   int i = dir;
-  int len = Vs[i]*gaugeSiteSize*cudaStaple->precision;
+  int len = Vs[i]*gaugeSiteSize*prec;
   int normlen = Vs[i]*sizeof(float);
   
   if(recv_whichway == QUDA_BACKWARDS){   
     comm_wait(llfat_recv_request1[i]);
     comm_wait(llfat_send_request1[i]);
 
-#if (CUDA_VERSION >= 4000)
-    unpackGhostStaple(cudaStaple, i, QUDA_BACKWARDS, fwd_nbr_staple, back_nbr_staple, stream);
+#ifdef GPU_DIRECT
+    unpackGhostStaple(X, even, odd, volume, prec, stride, 
+		      i, QUDA_BACKWARDS, fwd_nbr_staple, back_nbr_staple, stream);
 #else   
     memcpy(back_nbr_staple[i], back_nbr_staple_cpu[i], len);
-    unpackGhostStaple(cudaStaple, i, QUDA_BACKWARDS, fwd_nbr_staple, back_nbr_staple, stream);
+    unpackGhostStaple(X, even, odd, volume, prec, stride, 
+		      i, QUDA_BACKWARDS, fwd_nbr_staple, back_nbr_staple, stream);
 #endif
 
   } else { // QUDA_FORWARDS
     comm_wait(llfat_recv_request2[i]);  
     comm_wait(llfat_send_request2[i]);
 
-#if (CUDA_VERSION >= 4000)
-    unpackGhostStaple(cudaStaple, i, QUDA_FORWARDS, fwd_nbr_staple, back_nbr_staple, stream);
+#ifdef GPU_DIRECT
+    unpackGhostStaple(X, even, odd, volume, prec, stride, 
+		      i, QUDA_FORWARDS, fwd_nbr_staple, back_nbr_staple, stream);
 #else        
     memcpy(fwd_nbr_staple[i], fwd_nbr_staple_cpu[i], len);
-    unpackGhostStaple(cudaStaple, i, QUDA_FORWARDS, fwd_nbr_staple, back_nbr_staple, stream);
+    unpackGhostStaple(X, even, odd, volume, prec, stride,
+		      i, QUDA_FORWARDS, fwd_nbr_staple, back_nbr_staple, stream);
 #endif
 
   }
@@ -849,7 +1173,7 @@ exchange_llfat_cleanup(void)
 
   }
 
-#if (CUDA_VERSION < 4000)
+#ifdef GPU_DIRECT
   for(int i=0;i < 4; i++){
     if(fwd_nbr_staple_cpu[i]){
       free(fwd_nbr_staple_cpu[i]); fwd_nbr_staple_cpu[i] =NULL;

@@ -26,7 +26,8 @@ void *longlink[4];
 void** ghost_fatlink, **ghost_longlink;
 #endif
 
-int device = 0;
+extern int device;
+extern bool tune;
 
 extern QudaReconstructType link_recon;
 extern QudaPrecision prec;
@@ -160,7 +161,7 @@ set_params(QudaGaugeParam* gaugeParam, QudaInvertParam* inv_param,
   inv_param->gamma_basis = QUDA_DEGRAND_ROSSI_GAMMA_BASIS; // this is meaningless, but must be thus set
   inv_param->dirac_order = QUDA_DIRAC_ORDER;
   inv_param->dslash_type = QUDA_ASQTAD_DSLASH;
-  inv_param->dirac_tune = QUDA_TUNE_YES;
+  inv_param->dirac_tune = tune ? QUDA_TUNE_YES : QUDA_TUNE_NO;
   inv_param->preserve_dirac = QUDA_PRESERVE_DIRAC_NO;
   inv_param->sp_pad = X1*X2*X3/2;
   inv_param->use_init_guess = QUDA_USE_INIT_GUESS_YES;
@@ -239,6 +240,22 @@ invert_test(void)
 
   int fat_pad = tmp_value;
   int link_pad =  3*tmp_value;
+
+#ifdef MULTI_GPU
+  gaugeParam.type = QUDA_ASQTAD_FAT_LINKS;
+  gaugeParam.reconstruct = QUDA_RECONSTRUCT_NO;
+  GaugeFieldParam cpuFatParam(fatlink, gaugeParam);
+  cpuFat = new cpuGaugeField(cpuFatParam);
+  cpuFat->exchangeGhost();
+  ghost_fatlink = (void**)cpuFat->Ghost();
+  
+  gaugeParam.type = QUDA_ASQTAD_LONG_LINKS;
+  GaugeFieldParam cpuLongParam(longlink, gaugeParam);
+  cpuLong = new cpuGaugeField(cpuLongParam);
+  cpuLong->exchangeGhost();
+  ghost_longlink = (void**)cpuLong->Ghost();
+#endif
+  
   if(testtype == 6){    
     record_gauge(gaugeParam.X, fatlink, fat_pad,
 		 longlink, link_pad,
@@ -247,18 +264,7 @@ invert_test(void)
    }else{ 
     
 #ifdef MULTI_GPU
-    gaugeParam.type = QUDA_ASQTAD_FAT_LINKS;
-    gaugeParam.reconstruct = QUDA_RECONSTRUCT_NO;
-    GaugeFieldParam cpuFatParam(fatlink, gaugeParam);
-    cpuFat = new cpuGaugeField(cpuFatParam);
-    cpuFat->exchangeGhost();
-    ghost_fatlink = (void**)cpuFat->Ghost();
-    
-    gaugeParam.type = QUDA_ASQTAD_LONG_LINKS;
-    GaugeFieldParam cpuLongParam(longlink, gaugeParam);
-    cpuLong = new cpuGaugeField(cpuLongParam);
-    cpuLong->exchangeGhost();
-    ghost_longlink = (void**)cpuLong->Ghost();
+ 
 
     gaugeParam.type = QUDA_ASQTAD_FAT_LINKS;
     gaugeParam.ga_pad = fat_pad;
@@ -312,10 +318,6 @@ invert_test(void)
     nrm2 = norm_2(ref->V(), Vh*mySpinorSiteSize, inv_param.cpu_prec);
     src2 = norm_2(in->V(), Vh*mySpinorSiteSize, inv_param.cpu_prec);
 
-    {
-      double sol = norm_2(out->V(), Vh*mySpinorSiteSize, inv_param.cpu_prec);
-      double refe = norm_2(ref->V(), Vh*mySpinorSiteSize, inv_param.cpu_prec);
-    }
     break;
 
   case 1: //odd
@@ -411,7 +413,6 @@ invert_test(void)
       errorQuda("ERROR: invalid spinor parity \n");
       exit(1);
     }
-    
     for(int i=0;i < num_offsets;i++){
       printfQuda("%dth solution: mass=%f, ", i, masses[i]);
 #ifdef MULTI_GPU

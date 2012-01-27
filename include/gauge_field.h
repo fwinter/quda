@@ -22,14 +22,17 @@ struct GaugeFieldParam : public LatticeFieldParam {
 
   QudaFieldCreate create; // used to determine the type of field created
 
+  int pinned; //used in cpu field only, where the host memory is pinned
+  int is_staple; //set to 1 for staple, used in fatlink computation
  GaugeFieldParam(void *h_gauge, const QudaGaugeParam &param) : LatticeFieldParam(param),
     nColor(3), nFace(0), reconstruct(QUDA_RECONSTRUCT_NO),
     order(param.gauge_order), fixed(param.gauge_fix), link_type(param.type), 
     t_boundary(param.t_boundary), anisotropy(param.anisotropy), tadpole(param.tadpole_coeff),
-    gauge(h_gauge), create(QUDA_REFERENCE_FIELD_CREATE) {
+    gauge(h_gauge), create(QUDA_REFERENCE_FIELD_CREATE), is_staple(0) {
 
     if (link_type == QUDA_WILSON_LINKS || link_type == QUDA_ASQTAD_FAT_LINKS) nFace = 1;
     else if (link_type == QUDA_ASQTAD_LONG_LINKS) nFace = 3;
+    else errorQuda("Error: invalid link type(%d)\n", link_type);
   }
 };
 
@@ -54,7 +57,8 @@ class GaugeField : public LatticeField {
   double tadpole;
 
   QudaFieldCreate create; // used to determine the type of field created
-
+  int is_staple; //set to 1 for staple, used in fatlink computation
+  
  public:
   GaugeField(const GaugeFieldParam &param, const QudaFieldLocation &location);
   virtual ~GaugeField();
@@ -68,7 +72,10 @@ class GaugeField : public LatticeField {
   QudaLinkType LinkType() const { return link_type; }
   QudaGaugeFixed GaugeFixed() const { return fixed; }
 
-  virtual void checkField(const GaugeField &);
+  void checkField(const GaugeField &);
+
+  const size_t& Bytes() const { return bytes; }
+
 };
 
 class cudaGaugeField : public GaugeField {
@@ -89,32 +96,46 @@ class cudaGaugeField : public GaugeField {
   void *odd;
 
   double fat_link_max;
-
+  
  public:
   cudaGaugeField(const GaugeFieldParam &);
   virtual ~cudaGaugeField();
 
-  void loadCPUField(const cpuGaugeField &);
-  void saveCPUField(cpuGaugeField &) const;
+  void loadCPUField(const cpuGaugeField &, const QudaFieldLocation &);
+  void saveCPUField(cpuGaugeField &, const QudaFieldLocation &) const;
 
   double LinkMax() const { return fat_link_max; }
+
+  // (ab)use with care
+  void* Gauge_p() { return gauge; }
+  void* Even_p() { return even; }
+  void* Odd_p() { return odd; }
+
+  const void* Gauge_p() const { return gauge; }
+  const void* Even_p() const { return even; }
+  const void* Odd_p() const { return odd; }	
+
 };
 
 class cpuGaugeField : public GaugeField {
 
-  friend void cudaGaugeField::loadCPUField(const cpuGaugeField &cpu);
-  friend void cudaGaugeField::saveCPUField(cpuGaugeField &cpu) const;
+  friend void cudaGaugeField::loadCPUField(const cpuGaugeField &cpu, const QudaFieldLocation &);
+  friend void cudaGaugeField::saveCPUField(cpuGaugeField &cpu, const QudaFieldLocation &) const;
 
  private:
-  void *gauge[QUDA_MAX_DIM]; // the actual gauge field
-  mutable void *ghost[QUDA_MAX_DIM]; // stores the ghost zone of the gauge field
+  void **gauge; // the actual gauge field
 
+  mutable void **ghost; // stores the ghost zone of the gauge field
+  int pinned;
+  
  public:
   cpuGaugeField(const GaugeFieldParam &);
   virtual ~cpuGaugeField();
 
   void exchangeGhost() const;
   const void** Ghost() const { return (const void**)ghost; }
+
+  void* Gauge_p() { return gauge; }
 };
 
 #define gaugeSiteSize 18 // real numbers per gauge field

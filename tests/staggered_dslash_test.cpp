@@ -24,9 +24,8 @@
 #define staggeredSpinorSiteSize 6
 // What test are we doing (0 = dslash, 1 = MatPC, 2 = Mat)
 int test_type = 0;
-int device = 0;
 
-bool tune = false;
+extern bool tune;
 
 QudaGaugeParam gaugeParam;
 QudaInvertParam inv_param;
@@ -58,6 +57,8 @@ extern int tdim;
 extern int gridsize_from_cmdline[];
 extern QudaReconstructType link_recon;
 extern QudaPrecision prec;
+
+extern int device;
 
 int X[4];
 
@@ -272,7 +273,7 @@ void init()
     DiracParam diracParam;
     setDiracParam(diracParam, &inv_param, pc);
 
-    //diracParam.verbose = QUDA_DEBUG_VERBOSE;
+    diracParam.verbose = QUDA_VERBOSE;
     diracParam.tmp1=tmp;
 
     dirac = Dirac::create(diracParam);
@@ -362,6 +363,10 @@ double dslashCUDA() {
   if (stat != cudaSuccess)
     errorQuda("with ERROR: %s\n", cudaGetErrorString(stat));
     
+#ifdef DSLASH_PROFILING
+  printDslashProfile();
+#endif
+
   return secs;
 }
 
@@ -442,7 +447,7 @@ static int dslashTest()
     if (prec == QUDA_HALF_PRECISION) bytes_for_one_site += (8*2 + 1)*4;	
 
     printfQuda("GFLOPS = %f\n", 1.0e-9*flops/secs);
-    printfQuda("GiB/s = %f\n\n", 1.0*Vh*bytes_for_one_site/((secs/loops)*(1<<30)));
+    printfQuda("GB/s = %f\n\n", 1.0*Vh*bytes_for_one_site/((secs/loops)*1e+9));
 	
     if (!transfer) {
       double spinor_ref_norm2 = norm2(*spinorRef);
@@ -533,6 +538,9 @@ int main(int argc, char **argv)
   int accuracy_level = dslashTest();
 
   printfQuda("accuracy_level =%d\n", accuracy_level);
+
+  endQuda();
+
   if (accuracy_level >= 1) ret = 0;    //probably no error, -1 means no matching  
   endCommsQuda();
   return ret;

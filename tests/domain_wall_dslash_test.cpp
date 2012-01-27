@@ -14,7 +14,7 @@
 #include <domain_wall_dslash_reference.h>
 
 // What test are we doing (0 = dslash, 1 = MatPC, 2 = Mat)
-const int test_type = 2;
+const int test_type = 1;
 
 const QudaParity parity = QUDA_EVEN_PARITY; // even or odd?
 const QudaDagType dagger = QUDA_DAG_NO;     // apply Dslash or Dslash dagger?
@@ -176,7 +176,7 @@ void init() {
     bool pc = (test_type != 2);
     DiracParam diracParam;
     setDiracParam(diracParam, &inv_param, pc);
-    diracParam.verbose = QUDA_DEBUG_VERBOSE;
+    diracParam.verbose = QUDA_VERBOSE;
     diracParam.tmp1 = tmp;
     diracParam.tmp2 = tmp2;
     
@@ -325,7 +325,7 @@ int main(int argc, char **argv)
 
     printfQuda("GFLOPS = %f\n", 1.0e-9*flops/secs);
     printfQuda("GiB/s = %f\n\n", 
-	       Vh*Ls*(spinor_floats+gauge_floats)*inv_param.cuda_prec/((secs/loops)*(1<<30)));
+	       Vh*Ls*(spinor_floats+gauge_floats)*inv_param.cuda_prec/((secs/loops)*1e+9));
 
 
     if (!transfer) {
